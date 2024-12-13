@@ -79,15 +79,18 @@ This project uses a custom routing solution built on top of `react-router-dom` t
 ## File Structure
 ```plaintext
 src/
-├── componentsRegistry.tsx   # Manages the registry of components
-├── PageManager.tsx          # Main component managing routing and rendering
-├── store/
-│   ├── hooks/               # Custom hooks for Redux
-│   └── app/
-│       └── slice.ts         # Redux slice for app state management
-├── utilities/
-│   └── route-matching.ts    # Utility function for matching dynamic routes
+├── routes/                     # Routes-related files
+│   ├── pages/                  # Individual folders for each route, containing page-specific components
+│   ├── PageManager.tsx         # Main component managing routing and rendering
+│   └── componentsRegistry.tsx  # Manages the registry of components
+├── store/                      # State management
+│   ├── app/                    # Redux slices and actions for managing the entire app
+│   ├── hooks/                  # Custom Redux hooks
+│   └── routes/                 # Redux slices and actions for route-specific states
+├── utilities/                  # Reusable helper functions
+│   └── route-matching.tsx      # Utility function for matching dynamic routes
 ```
+
 
 ## Code Walkthrough
 ### `PageManager`
