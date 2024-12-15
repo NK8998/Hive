@@ -8,20 +8,24 @@ interface MatchResult {
 
 export const matchRoute = (urlPath: string, routes: { props: RouteProps }[]): MatchResult => {
   // Separate static and dynamic routes
-  const staticRoutes = routes.filter((route) => !route.props.path.includes(":"));
+  const staticRoutes = routes.filter((route) => !route.props.children.props.path.includes(":"));
   const dynamicRoutes = routes
-    .filter((route) => route.props.path.includes(":"))
-    .sort((a, b) => b.props.path.split("/").length - a.props.path.split("/").length); // Sort by specificity
+    .filter((route) => route.props.children.props.path.includes(":"))
+    .sort(
+      (a, b) =>
+        b.props.children.props.path.split("/").length -
+        a.props.children.props.path.split("/").length
+    ); // Sort by specificity
 
   // Check for a match in static routes first
-  const staticMatch = staticRoutes.find((route) => urlPath === route.props.path);
+  const staticMatch = staticRoutes.find((route) => urlPath === route.props.children.props.path);
   if (staticMatch) {
     return { route: staticMatch, params: {} }; // Exact match found
   }
 
   // Check for a match in dynamic routes
   for (const route of dynamicRoutes) {
-    const routeSegments = route.props.path.split("/");
+    const routeSegments = route.props.children.props.path.split("/");
     const urlSegments = urlPath.split("/");
 
     // Skip if URL has fewer segments than required by the route (excluding optional segments)
@@ -63,46 +67,5 @@ export const matchRoute = (urlPath: string, routes: { props: RouteProps }[]): Ma
     }
   }
 
-  return { route: { props: { component: <NotFound />, path: "*" } }, params: {} }; // No match found // No match found
+  return { route: { props: { element: <NotFound />, path: "*" } }, params: {} }; // No match found // No match found
 };
-
-// const matchRoute = (urlPath: string, routes: { props: RouteProps }[]): MatchResult => {
-//   // Separate static and dynamic routes
-//   const staticRoutes = routes.filter((route) => !route.props.path.includes(":"));
-//   const dynamicRoutes = routes.filter((route) => route.props.path.includes(":"));
-
-//   // Check for a match in static routes first
-//   const staticMatch = staticRoutes.find((route) => urlPath === route.props.path);
-//   if (staticMatch) {
-//     return { route: staticMatch, params: {} }; // Exact match found
-//   }
-
-//   // Check for a match in dynamic routes
-//   for (const route of dynamicRoutes) {
-//     const routeSegments = route.props.path.split("/");
-//     const urlSegments = urlPath.split("/");
-
-//     if (routeSegments.length !== urlSegments.length) {
-//       continue; // Skip if the segment counts don't match
-//     }
-
-//     const params: { [key: string]: string } = {}; // Define params type explicitly
-//     let isMatch = true;
-
-//     for (let i = 0; i < routeSegments.length; i++) {
-//       if (routeSegments[i].startsWith(":")) {
-//         const paramName = routeSegments[i].slice(1);
-//         params[paramName] = urlSegments[i]; // Assign the value to the correct param
-//       } else if (routeSegments[i] !== urlSegments[i]) {
-//         isMatch = false;
-//         break;
-//       }
-//     }
-
-//     if (isMatch) {
-//       return { route, params }; // Dynamic match with extracted parameters
-//     }
-//   }
-
-//   return { route: { props: { component: <NotFound />, path: "*" } }, params: {} }; // No match found
-// };

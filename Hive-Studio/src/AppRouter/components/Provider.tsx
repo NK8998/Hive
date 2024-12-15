@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
 
 // Define the types for the context
@@ -71,6 +71,7 @@ export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     search: window.location.search,
     key: nanoid(7), // Unique key
   });
+  const [currentFullPath, setCurrentFullPath] = useState("");
 
   useEffect(() => {
     const updateLocation = () => {
@@ -108,8 +109,20 @@ export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   return (
-    <AppRouterContext.Provider value={{ params, setParams, location, setLocation }}>
+    <AppRouterContext.Provider
+      value={{ params, setParams, location, setLocation, currentFullPath, setCurrentFullPath }}
+    >
       {children}
     </AppRouterContext.Provider>
+  );
+};
+
+export const ComponentContext = createContext(null);
+
+export const ComponentProvider = ({ children, initialValue }) => {
+  const routeChildren = useRef(initialValue);
+
+  return (
+    <ComponentContext.Provider value={{ routeChildren }}>{children}</ComponentContext.Provider>
   );
 };

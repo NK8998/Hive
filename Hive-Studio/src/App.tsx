@@ -10,18 +10,18 @@ import useFetchHomeVideos from "./store/routes/home/actions";
 import useFetchSelectedVideo from "./store/routes/watch/actions";
 
 function App() {
-  // Main functions that run for fetching initial component data
+  // Main functions that run for fetching initial element data
   const fetchVideos = useFetchHomeVideos();
   const fetchSelectedVideo = useFetchSelectedVideo();
-  // Main functions that run for fetching initial component data
+  // Main functions that run for fetching initial element data
 
   return (
     <AppRouter cacheEnabled>
-      <Route component={<Home />} path='/' prefetch action={fetchVideos} />
-      <Route component={<Watch />} path='/watch' prefetch action={fetchSelectedVideo} />
-      <Route component={<Channel />} path='/:channelName/:subRoute?' prefetch>
-        <Route component={<Features />} path={`/`} prefetch />
-        <Route component={<Videos />} path={`/videos`} prefetch />
+      <Route element={<Home />} path='/' prefetch action={fetchVideos} />
+      <Route element={<Watch />} path='/watch' prefetch action={fetchSelectedVideo} />
+      <Route element={<Channel />} path='/:channelName' prefetch>
+        <Route element={<Features />} path={`featured`} prefetch />
+        <Route element={<Videos />} path={`videos`} prefetch />
       </Route>
     </AppRouter>
   );

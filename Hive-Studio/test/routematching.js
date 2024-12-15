@@ -58,14 +58,7 @@ const matchRoute = (urlPath, routes) => {
   return null; // No match found
 };
 
-const routes = [
-  "/",
-  "/home",
-  "/watch",
-  "/flag/:id",
-  "/flag/secondFlag/:innerID",
-  "/:channelName/:subRoute?",
-];
+const routes = ["/", "/home", "/watch", "/flag/:id", "/flag/secondFlag/:innerID", "/:channelName"];
 
 const urlPath0 = "/";
 const urlPath1 = "/watch";

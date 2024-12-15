@@ -1,13 +1,8 @@
-import { ReactNode } from "react";
 import { useParams } from "../../AppRouter/components/Provider";
-import { RouteProps } from "../../AppRouter/components/Route";
 import Link from "../../AppRouter/components/Link";
+import OutLet from "../../AppRouter/components/Outlet";
 
-interface ChannelProps {
-  children?: { props: RouteProps };
-}
-
-export default function Channel({ children }: ChannelProps) {
+export default function Channel() {
   const params = useParams();
 
   return (
@@ -18,7 +13,9 @@ export default function Channel({ children }: ChannelProps) {
         <Link to={`/${params?.channelName}/featured`}>featured</Link>
         <Link to={`/${params?.channelName}/videos`}>videos</Link>
       </div>
-      <div className='route-renderer'>{children?.props.component}</div>
+      <div className='route-renderer'>
+        <OutLet />
+      </div>
     </div>
   );
 }
