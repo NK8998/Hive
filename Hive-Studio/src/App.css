@@ -40,3 +40,13 @@
 .read-the-docs {
   color: #888;
 }
+
+.route-handler{
+  display: flex;
+  gap: 20px;
+
+}
+.route-handler a{
+  padding: 10px;
+  border: 1px solid #646cffaa;
+}

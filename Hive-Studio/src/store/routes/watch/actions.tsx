@@ -1,14 +1,11 @@
 import { nanoid } from "nanoid";
-import { useAppDispatch } from "../../hooks/hooks";
 import { updateSelectedVideo } from "./slice";
-import { useLocation } from "../../../AppRouter/components/Provider";
+import { RootState } from "../../store";
+import { Dispatch } from "@reduxjs/toolkit";
 
-const useFetchSelectedVideo = () => {
-  const dispatch = useAppDispatch();
-  const { pathname, search } = useLocation();
-  console.log(pathname, search);
-
-  const fetchSelectedVideo = async () => {
+export const fetchSelectedVideo = (pathname: string, search: string) => {
+  return async (dispatch: Dispatch, getState: RootState) => {
+    console.log(pathname, search);
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve(null);
@@ -16,8 +13,4 @@ const useFetchSelectedVideo = () => {
     });
     dispatch(updateSelectedVideo({ videoId: nanoid(8), url: "http:://example.com/output.mpd" }));
   };
-
-  return fetchSelectedVideo;
 };
-
-export default useFetchSelectedVideo;

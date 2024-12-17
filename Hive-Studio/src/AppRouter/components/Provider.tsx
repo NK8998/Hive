@@ -120,7 +120,10 @@ export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 export const ComponentContext = createContext(null);
 
 export const ComponentProvider = ({ children, initialValue }) => {
-  const routeChildren = useRef(initialValue);
+  const [routeChildren, setRouteChildren] = useState(initialValue);
+  useEffect(() => {
+    setRouteChildren(initialValue);
+  }, [initialValue]);
 
   return (
     <ComponentContext.Provider value={{ routeChildren }}>{children}</ComponentContext.Provider>

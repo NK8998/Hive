@@ -7,11 +7,14 @@ export default function Channel() {
 
   return (
     <div className='channel-page'>
+      <Link to='/'>Home</Link>
       <h1>{params?.channelName}</h1>
       <h3>{params?.subRoute}</h3>
       <div className='route-handler'>
         <Link to={`/${params?.channelName}/featured`}>featured</Link>
         <Link to={`/${params?.channelName}/videos`}>videos</Link>
+        <Link to={`/${params?.channelName}/videos/inner`}>videos inner</Link>
+        <Link to={`/${params?.channelName}/videos/inner/someId`}>videos inner2</Link>
       </div>
       <div className='route-renderer'>
         <OutLet />

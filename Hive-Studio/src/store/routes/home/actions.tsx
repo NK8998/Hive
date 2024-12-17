@@ -1,13 +1,11 @@
-import { useLocation } from "../../../AppRouter/components/Provider";
-import { useAppDispatch } from "../../hooks/hooks";
+import { Dispatch } from "@reduxjs/toolkit";
+
 import { updateInitialFetch } from "./slice";
+import { RootState } from "../../store";
 
-const useFetchHomeVideos = () => {
-  const dispatch = useAppDispatch();
-  const { pathname, search } = useLocation();
-  console.log(pathname, search);
-
-  const fetchVideos = async () => {
+export const fetchVideos = (pathname: string, search: string) => {
+  return async (dispatch: Dispatch, getState: RootState) => {
+    console.log(pathname, search);
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve(null);
@@ -15,8 +13,4 @@ const useFetchHomeVideos = () => {
     });
     dispatch(updateInitialFetch(["vid1", "vid2"]));
   };
-
-  return fetchVideos;
 };
-
-export default useFetchHomeVideos;

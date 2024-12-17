@@ -5,5 +5,5 @@ export default function OutLet() {
   const context = useContext(ComponentContext);
   if (!context) throw new Error("React context does not exist");
   // console.log(context.routeChildren.current);
-  return <Fragment>{context.routeChildren.current}</Fragment>;
+  return context.routeChildren;
 }

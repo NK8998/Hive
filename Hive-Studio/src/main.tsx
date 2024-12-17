@@ -7,9 +7,11 @@ import store from "./store/store.tsx";
 import { AppRouterProvider } from "./AppRouter/components/Provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
-    <AppRouterProvider>
-      <App />
-    </AppRouterProvider>
-  </Provider>
+  <StrictMode>
+    <Provider store={store}>
+      <AppRouterProvider>
+        <App />
+      </AppRouterProvider>
+    </Provider>
+  </StrictMode>
 );
