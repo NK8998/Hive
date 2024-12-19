@@ -7,12 +7,12 @@ interface MatchResult {
 }
 
 // Helper function to check the properties of a given path
-const checkPath = (fullPath: string) => {
-  const isStatic = !fullPath.includes(":");
-  const hasOptionalSegments = fullPath.includes("?");
+// const checkPath = (fullPath: string) => {
+//   const isStatic = !fullPath.includes(":");
+//   const hasOptionalSegments = fullPath.includes("?");
 
-  return { isStatic, hasOptionalSegments };
-};
+//   return { isStatic, hasOptionalSegments };
+// };
 
 // Function to reset the isActive state of routes (used for clearing previously matched routes)
 const resetCurrentRoutes = (routes: RouteEntry[]) => {
@@ -81,7 +81,7 @@ export const matchRoute = (
     resetCurrentRoutes(currentRoutes); // Reset all current routes' states
   }
 
-  const normalizedUrlPath = urlPath.replace(/\/$/, ""); // Normalize the URL (remove trailing slash)
+  // const normalizedUrlPath = urlPath.replace(/\/$/, ""); // Normalize the URL (remove trailing slash)
   let topLevelParent: RouteEntry | null = null; // Variable to track top-level parent route
   let foundRoute = false; // Flag to indicate if a route is found
   let params: { [key: string]: string } = {}; // To store dynamic route parameters
