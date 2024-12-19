@@ -1,43 +1,36 @@
-import { Link, useNavigate } from "react-router-dom";
-import Featured from "./sub-components/featured/featured";
-import ChannelVideos from "./sub-components/videos/videos";
-import { ReactNode, useLayoutEffect, useState } from "react";
-import { useAppSelector } from "../../store/hooks/hooks";
+import { useParams } from "../../AppRouter/components/Provider";
+import Link from "../../AppRouter/components/Link";
+import OutLet from "../../AppRouter/components/Outlet";
 
 export default function Channel() {
-  const navigate = useNavigate();
-  const { channel, subRoute } = useAppSelector((state) => state.app.channelParams);
-  const [currentChild, setCurrentChild] = useState<ReactNode>(<Featured />);
-
-  useLayoutEffect(() => {
-    const childToRender = () => {
-      switch (subRoute) {
-        case "featured":
-          return <Featured />;
-        case "videos":
-          return <ChannelVideos />;
-        default:
-          return <Featured />; // Default to Featured or any other default component
-      }
-    };
-    setCurrentChild(childToRender());
-  }, [subRoute]);
+  const params = useParams();
 
   return (
-    <div className='route-inner'>
-      <h1>Channel</h1>
-      <Link to={"/"}>
-        <h1>HOME</h1>
-      </Link>
-      <Link to={"/history"}>to history</Link>
-      <div className='channel-content-page-swapper'>
-        <button onClick={() => navigate(`/${channel}/featured`)}>Home</button>
-        <button onClick={() => navigate(`/${channel}/videos`)}>Videos</button>
-        <button onClick={() => navigate(`/${channel}/shorts`)}>Shorts</button>
-        <button onClick={() => navigate(`/${channel}/live`)}>Live</button>
-        <button onClick={() => navigate(`/${channel}/playlists`)}>Playlists</button>
+    <div className='channel-page'>
+      <Link to='/'>Home</Link>
+      <h1>{params?.channelName}</h1>
+      <h3>{params?.subRoute}</h3>
+      <div className='route-handler'>
+        <Link to={`/${params?.channelName}/featured`}>
+          featured
+        </Link>
+        <Link to={`/${params?.channelName}/videos/more`}>
+          videos
+        </Link>
+        <Link
+          to={`/${params?.channelName}/videos/more/inner`}
+        >
+          videos inner
+        </Link>
+        <Link
+          to={`/${params?.channelName}/videos/more/inner/someId`}
+        >
+          videos inner2
+        </Link>
       </div>
-      <div className='channel-content'>{currentChild}</div>
+      <div className='route-renderer'>
+        <OutLet />
+      </div>
     </div>
   );
 }

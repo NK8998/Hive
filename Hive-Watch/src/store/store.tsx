@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import appReducer from "./app/slice.tsx";
-import homeReducer from "./routes/home/slice.tsx";
+import homeReducer from "./routes/home/slice";
+import watchReducer from "./routes/watch/slice";
 
 const store = configureStore({
   reducer: {
     home: homeReducer,
-    app: appReducer,
+    watch: watchReducer,
   },
 });
 

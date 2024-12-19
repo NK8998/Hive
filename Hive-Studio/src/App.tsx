@@ -12,7 +12,7 @@ import Home from "./Routes/home/home";
 import Watch from "./Routes/watch/watch";
 import { useAppDispatch } from "./store/hooks/hooks";
 import { fetchVideos } from "./store/routes/home/actions";
-import useFetchSelectedVideo, { fetchSelectedVideo } from "./store/routes/watch/actions";
+import { fetchSelectedVideo } from "./store/routes/watch/actions";
 
 function App() {
   const { pathname, search } = useLocation();

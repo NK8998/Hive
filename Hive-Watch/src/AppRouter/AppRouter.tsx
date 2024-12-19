@@ -1,30 +1,54 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import {
+  JSX,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { RouteProps } from "./components/Route";
 import { matchRoute } from "./components/routeMatching";
-import { useBrowserContext, useLocation } from "./components/Provider";
+import {
+  useBrowserContext,
+  useLocation,
+} from "./components/Provider";
 import routeWrapper from "./components/RouteWrapper";
-import { generateRouteLookup } from "./components/utility";
+import {
+  generateRouteLookup,
+  RouteEntry,
+} from "./components/generateRouteLookup";
 // Define the type for the children of AppRouterProps
 interface AppRouterProps {
   children: ReactNode[] & { props: RouteProps }[];
   cacheEnabled?: boolean;
 }
 
-export default function AppRouter({ children, cacheEnabled = false }: AppRouterProps) {
+export default function AppRouter({
+  children,
+  cacheEnabled = false,
+}: AppRouterProps) {
   const { pathname, key } = useLocation(); // Get current location path
-  const [routeLookup, setRouteLookUp] = useState([]);
-  const [currentRoute, setCurrentRoute] = useState([]); // Track routes for caching
-  const [wrappedRoutes, setWrappedRoutes] = useState([]);
+  const [routeLookup, setRouteLookUp] = useState<
+    RouteEntry[]
+  >([]);
+  const [currentRoutes, setCurrentRoutes] = useState<
+    RouteEntry[]
+  >([]); // Track routes for caching
+  const [wrappedRoutes, setWrappedRoutes] = useState<
+    JSX.Element[]
+  >([]);
   const prevKey = useRef<string>(null);
   const { setParams } = useBrowserContext();
 
   // Generate route lookup on initial render
   useEffect(() => {
-    const routes = generateRouteLookup(children, cacheEnabled);
+    const routes = generateRouteLookup(
+      children,
+      cacheEnabled
+    );
     setRouteLookUp(routes);
   }, []);
 
-  const fetchData = async (action: (...args: any[]) => Promise<void>) => {
+  const fetchData = async (action: any) => {
     await action();
   };
 
@@ -32,10 +56,12 @@ export default function AppRouter({ children, cacheEnabled = false }: AppRouterP
     if (key !== prevKey.current) return;
 
     if (cacheEnabled) {
-      // Add route to currentRoute, replacing an existing route if the componentID matches
-      setCurrentRoute((prevRoutes) => {
+      // Add route to currentRoutes, replacing an existing route if the componentID matches
+      setCurrentRoutes((prevRoutes) => {
         // Find if the route with the same componentID already exists
-        const routeIndex = prevRoutes.findIndex((r) => r.componentID === route.componentID);
+        const routeIndex = prevRoutes.findIndex(
+          (r) => r.componentID === route.componentID
+        );
 
         // If the route already exists, replace it
         const updatedRoutes = [...prevRoutes];
@@ -49,15 +75,19 @@ export default function AppRouter({ children, cacheEnabled = false }: AppRouterP
         }
 
         // Set isVisited to false for all routes except the current one
-        const updatedRoutesWithVisitedStatus = updatedRoutes.map((r) => ({
-          ...r,
-          isActive: r.componentID === route.componentID ? true : false,
-        }));
+        const updatedRoutesWithVisitedStatus =
+          updatedRoutes.map((r) => ({
+            ...r,
+            isActive:
+              r.componentID === route.componentID
+                ? true
+                : false,
+          }));
 
         return updatedRoutesWithVisitedStatus;
       });
     } else {
-      setCurrentRoute([route]);
+      setCurrentRoutes([route]);
     }
 
     setParams(params);
@@ -65,27 +95,31 @@ export default function AppRouter({ children, cacheEnabled = false }: AppRouterP
 
   const matchRoutes = () => {
     if (!routeLookup.length) return;
-    const { route, params } = matchRoute(routeLookup, pathname, currentRoute);
+    const { route, params } = matchRoute(
+      routeLookup,
+      pathname,
+      currentRoutes
+    );
 
-    if (route.action) {
-      fetchData(route.action).then(() => {
+    if (route && route.action) {
+      fetchData(route?.action).then(() => {
         updateUI(params, route);
       });
-    } else {
+    } else if (route) {
       updateUI(params, route);
     }
   };
 
   useEffect(() => {
-    const routesWithProvider = routeWrapper(currentRoute);
+    const routesWithProvider = routeWrapper(currentRoutes);
     setWrappedRoutes(routesWithProvider);
-  }, [currentRoute]); // Re-wrap the routes when currentRoute changes
+  }, [currentRoutes]); // Re-wrap the routes when currentRoutes changes
 
   // Trigger route matching on routeLookup or pathname change
   useEffect(() => {
     prevKey.current = key;
     matchRoutes();
-  }, [pathname, routeLookup]); // Ensure currentRoute is a dependency
+  }, [pathname, routeLookup]); // Ensure currentRoutes is a dependency
 
   if (routeLookup.length === 0) return null;
 

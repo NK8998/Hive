@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
+import Link from "../../AppRouter/components/Link";
 
 export default function Home() {
   return (
-    <div className='route-inner'>
-      <h1>This is the home page😍</h1>
-      <Link to={"/history"}>History</Link>
-      <Link to={"/watch?v=IxYUIN85K"}>AceVideo</Link>
+    <div className='home-page'>
+      <h1>Home Page</h1>
+      <Link to={"/watch"}>Watch page</Link>
+      <Link to='/history'>history</Link>
     </div>
   );
 }

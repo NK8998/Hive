@@ -1,10 +1,20 @@
-import { AppDispatch } from "../../store";
-import { updateInitialFetch } from "./slice";
+import { Dispatch } from "@reduxjs/toolkit";
 
-export const fetchHomeVideos = (currentRoute: string, search: string) => {
-  return async (dispatch: AppDispatch) => {
+import { updateInitialFetch } from "./slice";
+import { RootState } from "../../store";
+
+export const fetchVideos = (
+  pathname: string,
+  search: string
+) => {
+  return async (
+    dispatch: Dispatch,
+    getState: RootState
+  ) => {
     await new Promise((resolve) => {
       setTimeout(() => {
+        console.log(pathname, search);
+
         resolve(null);
       }, 3000);
     });
