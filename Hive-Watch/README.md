@@ -7,10 +7,6 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Sure! Here's a brief README that you can use for your repository:
-
----
-
 # React Route Management with Dynamic Parameters and Redux Integration
 
 This project is a custom React router implementation designed to manage dynamic routes with parameters, prefetching, and Redux integration for asynchronous actions. It includes a dynamic routing system that supports paths with parameters (e.g., `:id`) and static paths, along with nested route handling.
@@ -69,6 +65,11 @@ This route will match any URL with the path `/watch/:videoId` and trigger the `f
 </Route>
 ```
 
+```tsx
+      {/* Wild card route always at bottom */}
+      <Route path='*' element={<NotFound />} />
+```
+
 Nested routes are handled recursively, and each route can have its own children.
 
 ### Fetching Data on Route Change
@@ -88,8 +89,3 @@ Actions can be dispatched on route change to fetch or update data.
 ## Contributing
 
 Feel free to submit pull requests or raise issues for any bugs or enhancements.
-
----
-
-You can customize this as needed, but it should provide a solid foundation for your project's README.
-
