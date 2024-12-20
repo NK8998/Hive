@@ -1,3 +1,7 @@
 export default function History() {
-  return <div>This is the history</div>;
+  return (
+    <div className='history-page browser'>
+      This is the history
+    </div>
+  );
 }

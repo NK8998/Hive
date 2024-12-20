@@ -5,7 +5,7 @@ export default function Watch() {
   const { search } = useLocation();
 
   return (
-    <div className='watch-page'>
+    <div className='watch-page browser'>
       <h1>Watch Page</h1>
       <p>{search}</p>
       <Link to={"/WebdevSimplified"}>Webdev</Link>

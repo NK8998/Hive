@@ -6,7 +6,7 @@ export default function Channel() {
   const params = useParams();
 
   return (
-    <div className='channel-page'>
+    <div className='channel-page browser'>
       <Link to='/'>Home</Link>
       <h1>{params?.channelName}</h1>
       <h3>{params?.subRoute}</h3>
