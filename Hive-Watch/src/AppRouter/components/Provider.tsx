@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useLayoutEffect,
 } from "react";
 import { nanoid } from "nanoid";
 
@@ -64,7 +65,10 @@ export const useBrowserContext = () => {
 };
 
 export const useNavigate = () => {
+  const { pathname } = useLocation();
+
   const navigate = (path: string) => {
+    if (path === pathname) return;
     if (typeof path !== "string" || path.trim() === "") {
       console.warn("Invalid path passed to navigate.");
       return;
@@ -89,6 +93,7 @@ export const AppRouterProvider: React.FC<{
     string,
     any
   > | null>(null);
+
   const [location, setLocation] = useState({
     origin: window.location.origin,
     pathname: window.location.pathname,
@@ -161,7 +166,7 @@ export const ComponentProvider = ({
 }) => {
   const [routeChildren, setRouteChildren] =
     useState(initialValue);
-  useEffect(() => {
+  useLayoutEffect(() => {
     setRouteChildren(initialValue);
   }, [initialValue]);
 

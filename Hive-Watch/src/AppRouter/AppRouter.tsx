@@ -1,7 +1,7 @@
 import {
   JSX,
   ReactNode,
-  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -40,7 +40,7 @@ export default function AppRouter({
   const { setParams } = useBrowserContext();
 
   // Generate route lookup on initial render
-  useEffect(() => {
+  useLayoutEffect(() => {
     const routes = generateRouteLookup(
       children,
       cacheEnabled
@@ -96,13 +96,13 @@ export default function AppRouter({
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const routesWithProvider = routeWrapper(currentRoutes);
     setWrappedRoutes(routesWithProvider);
   }, [currentRoutes]); // Re-wrap the routes when currentRoutes changes
 
   // Trigger route matching on routeLookup or pathname change
-  useEffect(() => {
+  useLayoutEffect(() => {
     prevKey.current = key;
     matchRoutes();
   }, [pathname, routeLookup]); // Ensure currentRoutes is a dependency
