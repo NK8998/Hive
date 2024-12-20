@@ -34,6 +34,9 @@ export default function AppRouter({
   const [currentRoutes, setCurrentRoutes] = useState<
     RouteEntry[]
   >([]); // Track routes for caching
+  const [wrappedRoutes, setWrappedRoutes] = useState<
+    JSX.Element[]
+  >([]);
   const prevKey = useRef<string>(null);
   const { setParams } = useBrowserContext();
 
@@ -93,9 +96,10 @@ export default function AppRouter({
     }
   };
 
-  const wrappedRoutes = useMemo(() => {
-    return routeWrapper(currentRoutes);
-  }, [currentRoutes]); // Recompute only when currentRoutes changes
+  useEffect(() => {
+    const routesWithProvider = routeWrapper(currentRoutes);
+    setWrappedRoutes(routesWithProvider);
+  }, [currentRoutes]); // Re-wrap the routes when currentRoutes changes
 
   // Trigger route matching on routeLookup or pathname change
   useEffect(() => {
