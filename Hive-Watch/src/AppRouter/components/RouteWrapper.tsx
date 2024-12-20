@@ -30,5 +30,7 @@ export default function routeWrapper(
     });
   };
 
-  return wrapWithProvider(children);
+  const wrappedRoutes = wrapWithProvider(children);
+
+  return wrappedRoutes;
 }
