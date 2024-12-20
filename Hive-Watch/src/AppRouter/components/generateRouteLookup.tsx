@@ -4,7 +4,6 @@ import React, {
   ReactElement,
   ReactNode,
 } from "react";
-import NotFound from "./404/NotFound";
 import { Dispatch } from "@reduxjs/toolkit";
 import { RootState } from "../../store/store";
 

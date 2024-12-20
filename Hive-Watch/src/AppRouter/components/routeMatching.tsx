@@ -1,4 +1,5 @@
 import { RouteEntry } from "./generateRouteLookup";
+import { replaceDynamicParts } from "./utility";
 
 // Define the structure for the result of the route matching
 interface MatchResult {
@@ -6,138 +7,75 @@ interface MatchResult {
   params: { [key: string]: string };
 }
 
-// Helper function to check the properties of a given path
-// const checkPath = (fullPath: string) => {
-//   const isStatic = !fullPath.includes(":");
-//   const hasOptionalSegments = fullPath.includes("?");
-
-//   return { isStatic, hasOptionalSegments };
-// };
-
-// Function to reset the isActive state of routes (used for clearing previously matched routes)
-const resetCurrentRoutes = (routes: RouteEntry[]) => {
-  for (const route of routes) {
-    route.isActive = false; // Reset isActive for each route
-
-    // Recursively reset children routes if any
-    if (route.children.length > 0) {
-      resetCurrentRoutes(route.children);
-    }
-  }
-};
-
-const replaceDynamicParts = (
-  firstString: string,
-  secondString: string,
-  params: { [key: string]: string }
-) => {
-  // Split both strings by '/' and filter out any empty segments
-  const firstParts = firstString.split("/").filter(Boolean);
-  const secondParts = secondString
-    .split("/")
-    .filter(Boolean);
-
-  // Initialize resultString as an array to store the transformed parts
-  let resultParts: string[] = [];
-
-  // Index to track the second string (dynamic values)
-  let secondPartIndex = 0;
-
-  // Loop over firstParts and replace dynamic placeholders
-  for (const part of firstParts) {
-    // If this part contains a dynamic segment (i.e., starts with ':')
-    if (part.startsWith(":")) {
-      const paramName = part.slice(1); // Extract the parameter name from ":param"
-
-      // Add to params object
-      if (secondPartIndex < secondParts.length) {
-        params[paramName] = secondParts[secondPartIndex];
-      }
-
-      // Replace the dynamic part with the corresponding value from secondParts
-      resultParts.push(secondParts[secondPartIndex]);
-    } else {
-      // Otherwise, just add the static part as-is
-      resultParts.push(part);
-    }
-    secondPartIndex++; // Move to the next value in secondParts
-  }
-
-  // Join the resultParts back into a string
-  const resultString = "/" + resultParts.join("/");
-
-  // Return the final transformed string
-  return resultString;
-};
-
-// Main function to match routes based on the URL path
 export const matchRoute = (
   routes: RouteEntry[], // List of all route entries
-  urlPath: string, // URL path to be matched
-  currentRoutes: RouteEntry[] // Current routes (used to reset isActive)
+  urlPath: string // URL path to be matched
 ): MatchResult => {
-  // resetting routes and variables before matching
-  if (currentRoutes) {
-    resetCurrentRoutes(currentRoutes); // Reset all current routes' states
-  }
-
-  // const normalizedUrlPath = urlPath.replace(/\/$/, ""); // Normalize the URL (remove trailing slash)
-  let topLevelParent: RouteEntry | null = null; // Variable to track top-level parent route
-  let foundRoute = false; // Flag to indicate if a route is found
-  let params: { [key: string]: string } = {}; // To store dynamic route parameters
+  const normalizedUrlPath =
+    urlPath === "/" ? urlPath : urlPath.replace(/\/$/, "");
+  let currentTopLevelParent: RouteEntry | null = null;
+  let foundRoute: RouteEntry | null = null;
+  let params: { [key: string]: string } = {};
+  let indexChildId = "";
 
   // Main loop to check each route
   const looper = (
-    routes: RouteEntry[], // List of route entries to iterate over
-    urlPath: string, // The URL path to match
-    nested = false // Flag to check if we are in a nested route
+    routes: RouteEntry[],
+    urlPath: string,
+    nested = false
   ) => {
     for (const route of routes) {
-      // Stop if route is already found
-      if (foundRoute) break;
+      const { fullPath, children, partialPath } = route;
 
-      // Set topLevelParent if not in a nested route
-      if (!nested) topLevelParent = route;
+      if (!nested) currentTopLevelParent = route;
 
-      // Reinitializing values for each iteration
-      foundRoute = false;
-      params = {}; // Reset params for each route
-
-      const { fullPath, children, partialPath } = route; // Destructure route properties
+      if (route.componentID !== indexChildId) {
+        // doing this to reset the current route visibility first
+        route.isActive = false;
+      }
 
       const replacedUrl = replaceDynamicParts(
         fullPath,
-        urlPath,
+        normalizedUrlPath,
         params
       );
-      if (urlPath === replacedUrl || partialPath === "/*") {
+
+      // if no route matches then 404 page displayed and is always last in the array of routes
+      if (
+        (normalizedUrlPath === replacedUrl ||
+          partialPath === "/*") &&
+        !foundRoute
+      ) {
         route.isActive = true;
         route.isVisited = true;
-        foundRoute = true;
-        const childIndex = children.find(
+        foundRoute = currentTopLevelParent;
+        const indexChild = children.find(
           (child) => child.index
         );
-        if (childIndex) {
-          childIndex.isActive = true;
-          childIndex.isVisited = true;
+        if (indexChild) {
+          // doing this so index child isn't reset to inactive
+          indexChildId = indexChild?.componentID;
+
+          indexChild.isActive = true;
+          indexChild.isVisited = true;
         }
-        break;
       }
       if (
         children.length > 0 &&
         urlPath.includes(replacedUrl)
       ) {
-        route.isActive = true;
-        route.isVisited = true;
+        if (!foundRoute) {
+          // to ensure all routes in the hierachy till the current route are active
+          route.isActive = true;
+          route.isVisited = true;
+        }
         looper(children, urlPath, true);
-      } else {
-        route.isActive = false;
       }
     }
 
-    // Return the matched route (if any) and parameters
-    let route = topLevelParent;
-
+    let route = foundRoute
+      ? foundRoute
+      : currentTopLevelParent;
     return { route, params };
   };
 

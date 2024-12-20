@@ -1,11 +1,22 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import { nanoid } from "nanoid";
 
 // Define the types for the context
 export type AppRouterContextType = {
   params: Record<string, any> | null;
   setParams: (newParams: Record<string, any>) => void;
-  location: { origin: string; pathname: string; search: string; key: string };
+  location: {
+    origin: string;
+    pathname: string;
+    search: string;
+    key: string;
+  };
   setLocation: (newLocation: {
     origin: string;
     pathname: string;
@@ -15,13 +26,17 @@ export type AppRouterContextType = {
 };
 
 // Create the context
-export const AppRouterContext = createContext<AppRouterContextType | undefined>(undefined);
+export const AppRouterContext = createContext<
+  AppRouterContextType | undefined
+>(undefined);
 
 // Custom hook to use params
 export const useParams = () => {
   const context = useContext(AppRouterContext);
   if (!context) {
-    throw new Error("useParams must be used within a ParamsProvider");
+    throw new Error(
+      "useParams must be used within a ParamsProvider"
+    );
   }
   return context.params;
 };
@@ -30,7 +45,9 @@ export const useParams = () => {
 export const useLocation = () => {
   const context = useContext(AppRouterContext);
   if (!context) {
-    throw new Error("useLocation must be used within a ParamsProvider");
+    throw new Error(
+      "useLocation must be used within a ParamsProvider"
+    );
   }
   return { ...context.location };
 };
@@ -39,7 +56,9 @@ export const useBrowserContext = () => {
   const context = useContext(AppRouterContext);
 
   if (!context) {
-    throw new Error("useLocation must be used within a ParamsProvider");
+    throw new Error(
+      "useLocation must be used within a ParamsProvider"
+    );
   }
   return context;
 };
@@ -63,15 +82,21 @@ export const useNavigate = () => {
 };
 
 // ParamsProvider component to wrap the app with context
-export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [params, setParams] = useState<Record<string, any> | null>(null);
+export const AppRouterProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  const [params, setParams] = useState<Record<
+    string,
+    any
+  > | null>(null);
   const [location, setLocation] = useState({
     origin: window.location.origin,
     pathname: window.location.pathname,
     search: window.location.search,
     key: nanoid(7), // Unique key
   });
-  const [currentFullPath, setCurrentFullPath] = useState("");
+  const [currentFullPath, setCurrentFullPath] =
+    useState("");
 
   useEffect(() => {
     const updateLocation = () => {
@@ -85,7 +110,8 @@ export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     // Wrap pushState and replaceState to detect programmatic navigation
     const originalPushState = window.history.pushState;
-    const originalReplaceState = window.history.replaceState;
+    const originalReplaceState =
+      window.history.replaceState;
 
     window.history.pushState = function (...args) {
       originalPushState.apply(window.history, args);
@@ -104,13 +130,23 @@ export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return () => {
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
-      window.removeEventListener("popstate", updateLocation);
+      window.removeEventListener(
+        "popstate",
+        updateLocation
+      );
     };
   }, []);
 
   return (
     <AppRouterContext.Provider
-      value={{ params, setParams, location, setLocation, currentFullPath, setCurrentFullPath }}
+      value={{
+        params,
+        setParams,
+        location,
+        setLocation,
+        currentFullPath,
+        setCurrentFullPath,
+      }}
     >
       {children}
     </AppRouterContext.Provider>
@@ -119,13 +155,19 @@ export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
 export const ComponentContext = createContext(null);
 
-export const ComponentProvider = ({ children, initialValue }) => {
-  const [routeChildren, setRouteChildren] = useState(initialValue);
+export const ComponentProvider = ({
+  children,
+  initialValue,
+}) => {
+  const [routeChildren, setRouteChildren] =
+    useState(initialValue);
   useEffect(() => {
     setRouteChildren(initialValue);
   }, [initialValue]);
 
   return (
-    <ComponentContext.Provider value={{ routeChildren }}>{children}</ComponentContext.Provider>
+    <ComponentContext.Provider value={{ routeChildren }}>
+      {children}
+    </ComponentContext.Provider>
   );
 };

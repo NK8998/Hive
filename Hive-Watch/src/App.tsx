@@ -24,7 +24,7 @@ function App() {
   };
 
   return (
-    <AppRouter>
+    <AppRouter cacheEnabled>
       <Route
         element={<Home />}
         path='/'
