@@ -2,7 +2,6 @@ import {
   JSX,
   ReactNode,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -82,13 +81,14 @@ export default function AppRouter({
 
   const matchRoutes = () => {
     if (!routeLookup.length) return;
+
     const { route, params } = matchRoute(
       routeLookup,
       pathname
     );
 
     if (route && route.action) {
-      fetchData(route?.action).then(() => {
+      fetchData(route.action).then(() => {
         updateUI(params, route);
       });
     } else if (route) {

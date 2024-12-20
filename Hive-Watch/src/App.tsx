@@ -20,7 +20,7 @@ function App() {
   const dispatch = useAppDispatch();
 
   const handleAction = async (func: any) => {
-    await dispatch(func(pathname, search));
+    dispatch(func(pathname, search));
   };
 
   return (
