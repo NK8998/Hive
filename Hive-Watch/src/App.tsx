@@ -22,7 +22,7 @@ function App() {
   const dispatch = useAppDispatch();
 
   const handleAction = async (func: any) => {
-    dispatch(func(pathname, search));
+    await dispatch(func(pathname, search));
   };
 
   return (
@@ -42,9 +42,7 @@ function App() {
               element={<Watch />}
               path='/watch'
               prefetch
-              action={() =>
-                handleAction(fetchSelectedVideo)
-              }
+              action={() => handleAction(fetchSelectedVideo)}
             />
             <Route
               element={<Channel />}
@@ -62,11 +60,7 @@ function App() {
                 path={`videos/more`}
                 prefetch
               >
-                <Route
-                  element={<Inner />}
-                  path={"inner"}
-                  prefetch
-                >
+                <Route element={<Inner />} path={"inner"} prefetch>
                   <Route
                     element={<Inner2 />}
                     path={":inner2"}
@@ -80,11 +74,7 @@ function App() {
                 </Route>
               </Route>
             </Route>
-            <Route
-              path='/history'
-              element={<History />}
-              prefetch
-            />
+            <Route path='/history' element={<History />} prefetch />
             {/* Wild card route always at bottom */}
             <Route path='*' element={<NotFound />} />
           </AppRouter>

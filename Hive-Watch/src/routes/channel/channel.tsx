@@ -11,20 +11,12 @@ export default function Channel() {
       <h1>{params?.channelName}</h1>
       <h3>{params?.subRoute}</h3>
       <div className='route-handler'>
-        <Link to={`/${params?.channelName}/featured`}>
-          featured
-        </Link>
-        <Link to={`/${params?.channelName}/videos/more`}>
-          videos
-        </Link>
-        <Link
-          to={`/${params?.channelName}/videos/more/inner`}
-        >
+        <Link to={`/${params?.channelName}/featured`}>featured</Link>
+        <Link to={`/${params?.channelName}/videos/more`}>videos</Link>
+        <Link to={`/${params?.channelName}/videos/more/inner`}>
           videos inner
         </Link>
-        <Link
-          to={`/${params?.channelName}/videos/more/inner/someId`}
-        >
+        <Link to={`/${params?.channelName}/videos/more/inner/someId`}>
           videos inner2
         </Link>
       </div>
