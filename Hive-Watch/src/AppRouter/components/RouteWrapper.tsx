@@ -12,8 +12,7 @@ export default function routeWrapper(
       // Get the children of this Route
       const routeChildren = child.children;
       // Recursively wrap the children of this route
-      const wrappedChildren =
-        wrapWithProvider(routeChildren);
+      const wrappedChildren = wrapWithProvider(routeChildren);
 
       return (
         <ComponentProvider

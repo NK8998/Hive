@@ -4,9 +4,7 @@ export const replaceDynamicParts = (
   params: { [key: string]: string }
 ) => {
   const firstParts = firstString.split("/").filter(Boolean);
-  const secondParts = secondString
-    .split("/")
-    .filter(Boolean);
+  const secondParts = secondString.split("/").filter(Boolean);
 
   let resultParts: string[] = [];
 
@@ -31,7 +29,5 @@ export const replaceDynamicParts = (
   const resultString = "/" + resultParts.join("/");
 
   // Return the final transformed string
-  return resultString === "/"
-    ? "/"
-    : resultString.replace(/\/$/, "");
+  return resultString === "/" ? "/" : resultString.replace(/\/$/, "");
 };

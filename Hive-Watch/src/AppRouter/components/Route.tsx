@@ -12,10 +12,7 @@ export interface RouteProps {
     ...args: any
   ) =>
     | Promise<void>
-    | ((
-        dispatch: Dispatch,
-        getState: RootState
-      ) => Promise<void>);
+    | ((dispatch: Dispatch, getState: RootState) => Promise<void>);
   prefetch?: boolean;
   isVisited?: boolean;
   isActive?: boolean;

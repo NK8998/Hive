@@ -27,24 +27,19 @@ export default function AppRouter({
   cacheEnabled = false,
 }: AppRouterProps) {
   const { pathname, key } = useLocation();
-  const [routeLookup, setRouteLookUp] = useState<
-    RouteEntry[]
-  >([]);
-  const [currentRoutes, setCurrentRoutes] = useState<
-    RouteEntry[]
-  >([]); // Track routes for caching
-  const [wrappedRoutes, setWrappedRoutes] = useState<
-    JSX.Element[]
-  >([]);
+  const [routeLookup, setRouteLookUp] = useState<RouteEntry[]>([]);
+  const [currentRoutes, setCurrentRoutes] = useState<RouteEntry[]>(
+    []
+  ); // Track routes for caching
+  const [wrappedRoutes, setWrappedRoutes] = useState<JSX.Element[]>(
+    []
+  );
   const prevKey = useRef<string>(null);
   const { setParams } = useBrowserContext();
 
   // Generate route lookup on initial render
   useLayoutEffect(() => {
-    const routes = generateRouteLookup(
-      children,
-      cacheEnabled
-    );
+    const routes = generateRouteLookup(children, cacheEnabled);
     setRouteLookUp(routes);
   }, []);
 
@@ -82,10 +77,7 @@ export default function AppRouter({
   const matchRoutes = () => {
     if (!routeLookup.length) return;
 
-    const { route, params } = matchRoute(
-      routeLookup,
-      pathname
-    );
+    const { route, params } = matchRoute(routeLookup, pathname);
 
     if (route && route.action) {
       fetchData(route.action).then(() => {
