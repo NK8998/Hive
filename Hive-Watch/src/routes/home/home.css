@@ -1,0 +1,8 @@
+.filter-chip-bar{
+    width: 100%;
+    height: 70px;
+    background-color: rgba(0, 0, 0, 0.845);
+    position: sticky;
+    top: 56px;
+    z-index: 12;
+}

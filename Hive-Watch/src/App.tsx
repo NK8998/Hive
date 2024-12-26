@@ -28,49 +28,23 @@ function App() {
   return (
     <div className='hvd-app'>
       <Masthead />
-      <div className='hvd-app-main'>
+      <div className='hvd-app-flexy'>
         <Guide />
         <div className='page-manager'>
           <AppRouter>
-            <Route
-              element={<Home />}
-              path='/'
-              prefetch
-              action={() => handleAction(fetchVideos)}
-            />
+            <Route element={<Home />} path='/' prefetch action={() => handleAction(fetchVideos)} />
             <Route
               element={<Watch />}
               path='/watch'
               prefetch
               action={() => handleAction(fetchSelectedVideo)}
             />
-            <Route
-              element={<Channel />}
-              path='/:channelName'
-              prefetch
-            >
-              <Route
-                element={<Features />}
-                path={`:featured`}
-                index
-                prefetch
-              />
-              <Route
-                element={<Videos />}
-                path={`videos/more`}
-                prefetch
-              >
+            <Route element={<Channel />} path='/:channelName' prefetch>
+              <Route element={<Features />} path={`:featured`} index prefetch />
+              <Route element={<Videos />} path={`videos/more`} prefetch>
                 <Route element={<Inner />} path={"inner"} prefetch>
-                  <Route
-                    element={<Inner2 />}
-                    path={":inner2"}
-                    prefetch
-                  />
-                  <Route
-                    element={<Inner />}
-                    path='/shouldwork'
-                    prefetch
-                  />
+                  <Route element={<Inner2 />} path={":inner2"} prefetch />
+                  <Route element={<Inner />} path='/shouldwork' prefetch />
                 </Route>
               </Route>
             </Route>

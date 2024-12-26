@@ -8,11 +8,7 @@ export interface RouteProps {
   fullPath?: string;
   partialPath?: string;
   timeout?: number | null;
-  action?: (
-    ...args: any
-  ) =>
-    | Promise<void>
-    | ((dispatch: Dispatch, getState: RootState) => Promise<void>);
+  action?: (...args: any) => Promise<void> | ((dispatch: Dispatch, getState: RootState) => Promise<void>);
   prefetch?: boolean;
   isVisited?: boolean;
   isActive?: boolean;
@@ -23,13 +19,7 @@ export interface RouteProps {
   cacheEnabled?: boolean;
 }
 
-export default function Route({
-  element,
-  cacheEnabled,
-  isVisited,
-  isActive,
-  children,
-}: RouteProps) {
+export default function Route({ element, cacheEnabled, isVisited, isActive, children }: RouteProps) {
   // console.log({ isVisited, isActive });
   if (cacheEnabled) {
     return isVisited ? (
