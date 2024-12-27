@@ -1,6 +1,8 @@
 import Link from "../../AppRouter/components/Link";
 import { useLocation } from "../../AppRouter/components/Provider";
 import Player from "./components/player/player";
+import Secondary from "./components/secondary_content/secondary_content";
+import "./watch.css";
 
 export default function Watch() {
   const { search } = useLocation();
@@ -97,10 +99,14 @@ export default function Watch() {
 
   return (
     <div className='watch-page browser'>
-      <h1>Watch Page</h1>
-      <p>{search}</p>
-      <Link to={"/WebdevSimplified"}>Webdev</Link>
-      <Player videoDetails={video} />
+      <div className='columns'>
+        <div className='main-column'>
+          <Player videoDetails={video} />
+        </div>
+        <div className='secondary-column'>
+          <Secondary />
+        </div>
+      </div>
     </div>
   );
 }

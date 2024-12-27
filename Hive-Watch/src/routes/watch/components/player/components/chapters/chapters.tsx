@@ -12,7 +12,5 @@ export default function Chapters() {
     setChapters(generateChapters(description, duration));
   }, [_videoDetails]);
 
-  console.log(chapters);
-
   return <div className='chapters-container'></div>;
 }

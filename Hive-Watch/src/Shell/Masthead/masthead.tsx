@@ -1,11 +1,9 @@
-import { toggleGuideVisibility } from "../../store/app/slice";
-import { useAppDispatch } from "../../store/hooks/hooks";
+import GuideBtn from "../Guide/components/guide_btn";
 
 export default function Masthead() {
-  const dispatch = useAppDispatch();
   return (
     <div className='masthead'>
-      <button onClick={() => dispatch(toggleGuideVisibility(null))}>Click me</button>
+      <GuideBtn />
     </div>
   );
 }

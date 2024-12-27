@@ -1,25 +1,30 @@
 import { useEffect } from "react";
 import { usePlayerContext } from "../../context";
-import { shakaTyped } from "../../utils/typed_shaka";
+import "./captions.css";
 
 export default function Captions() {
   const { player } = usePlayerContext();
 
   useEffect(() => {
-    const captionContainer = document.querySelector(".captions-container-relative") as HTMLDivElement;
-    const videoElement = document.querySelector(".html5-player") as HTMLVideoElement;
-
-    if (!player || !captionContainer || !videoElement) return;
-
-    while (captionContainer.firstChild) {
-      captionContainer.removeChild(captionContainer.firstChild);
-    }
-
-    new shakaTyped.ui.Overlay(player, captionContainer, videoElement);
+    document.addEventListener("keyup", (e) => {
+      if (e.key.toLocaleLowerCase() === "c") {
+        const captions_url =
+          "https://getting-started8998.s3.ap-south-1.amazonaws.com/HLQKrW-rqrf/captions/captions.vtt";
+        player
+          ?.addTextTrackAsync(captions_url, "en", "subtitles", "text/vtt")
+          .then(function () {
+            console.log("Subtitle track added");
+          })
+          .catch(function (error) {
+            console.error("Error adding subtitle track:", error);
+          });
+        player?.setTextTrackVisibility(true);
+      }
+    });
   }, [player]);
   return (
-    <div className='captions-container-relative'>
-      <div className='captions-inner'></div>
+    <div className='captions-container-absolute'>
+      <div className='captions-container-relative'></div>
     </div>
   );
 }

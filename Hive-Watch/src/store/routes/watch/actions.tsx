@@ -3,20 +3,14 @@ import { updateSelectedVideo } from "./slice";
 import { RootState } from "../../store";
 import { Dispatch } from "@reduxjs/toolkit";
 
-export const fetchSelectedVideo = (
-  pathname: string,
-  search: string
-) => {
-  return async (
-    dispatch: Dispatch,
-    getState: RootState
-  ) => {
+export const fetchSelectedVideo = (pathname: string, search: string) => {
+  return async (dispatch: Dispatch, getState: RootState) => {
     await new Promise((resolve) => {
       setTimeout(() => {
         console.log(pathname, search);
 
         resolve(null);
-      }, 3000);
+      }, 1500);
     });
     dispatch(
       updateSelectedVideo({

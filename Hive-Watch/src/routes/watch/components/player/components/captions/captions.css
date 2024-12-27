@@ -1,0 +1,34 @@
+.captions-container-absolute{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
+
+.captions-container-relative{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.shaka-controls-container,
+.shaka-scrim-container,
+.shaka-hidden-fast-forward-container,
+.shaka-fast-foward-container,
+.shaka-client-side-ad-container.shaka-hidden,
+.shaka-client-side-ad-container,
+.shaka-spinner-container.shaka-hidden,
+.shaka-spinner-container,
+.shaka-spinner{
+  display: none;
+}
+
+.shaka-text-container{
+    transition: bottom 150ms ease;
+    bottom: 0px;
+    position: absolute;
+    height: 50px;
+    width: 100%;
+    padding-bottom: 30px;
+    font-size: 20px;
+  }
