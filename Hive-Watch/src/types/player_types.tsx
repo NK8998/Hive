@@ -1,5 +1,3 @@
-import shaka from "shaka-player";
-
 interface VideoPalette {
   [key: string]: string; // e.g., palleteUrl-0, palleteUrl-1, etc.
 }
@@ -17,7 +15,7 @@ interface VideoThumbnailUrls {
   [key: string]: string; // e.g., thumbnailUrl-0, thumbnailUrl-1, etc.
 }
 
-interface VideoDetails {
+export interface VideoDetails {
   aspect_ratio: number;
   captions_url: string | null;
   category: string | null;
@@ -62,12 +60,18 @@ export interface VideoDetailsProps {
 }
 
 export interface PlayerContextProps {
-  videoElement: HTMLVideoElement | null;
-  setVideoElement: React.Dispatch<React.SetStateAction<HTMLVideoElement | null>>;
   player: shaka.Player | null;
   setPlayer: React.Dispatch<React.SetStateAction<shaka.Player | null>>;
-  videoDetails: Record<string, any>;
-  setVideoDetails: React.Dispatch<React.SetStateAction<Record<string, any>>>;
-  attatchPlayer: (mpd_url: string) => void;
+  _videoDetails: VideoDetails | null;
+  setVideoDetails: React.Dispatch<React.SetStateAction<VideoDetails | null>>;
+  chapters: Chapter[];
+  setChapters: React.Dispatch<React.SetStateAction<Chapter[]>>;
+  attatchPlayer: (...args: any) => void;
   detachPlayer: (...args: any[]) => void;
+}
+
+export interface Chapter {
+  start: number;
+  title: string;
+  end?: number; // Optional because 'end' is added later
 }

@@ -1,41 +1,25 @@
-import {
-  JSX,
-  ReactNode,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { JSX, ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { RouteProps } from "./components/Route";
 import { matchRoute } from "./components/routeMatching";
-import {
-  useBrowserContext,
-  useLocation,
-} from "./components/Provider";
+import { useBrowserContext, useLocation } from "./components/Provider";
 import routeWrapper from "./components/RouteWrapper";
-import {
-  generateRouteLookup,
-  RouteEntry,
-} from "./components/generateRouteLookup";
+import { generateRouteLookup, RouteEntry } from "./components/generateRouteLookup";
+import { useAppDispatch } from "../store/hooks/hooks";
+import { updateTargetRoute } from "../store/app/slice";
 
 interface AppRouterProps {
   children: ReactNode[] & { props: RouteProps }[];
   cacheEnabled?: boolean;
 }
 
-export default function AppRouter({
-  children,
-  cacheEnabled = false,
-}: AppRouterProps) {
+export default function AppRouter({ children, cacheEnabled = false }: AppRouterProps) {
   const { pathname, key } = useLocation();
   const [routeLookup, setRouteLookUp] = useState<RouteEntry[]>([]);
-  const [currentRoutes, setCurrentRoutes] = useState<RouteEntry[]>(
-    []
-  ); // Track routes for caching
-  const [wrappedRoutes, setWrappedRoutes] = useState<JSX.Element[]>(
-    []
-  );
+  const [currentRoutes, setCurrentRoutes] = useState<RouteEntry[]>([]); // Track routes for caching
+  const [wrappedRoutes, setWrappedRoutes] = useState<JSX.Element[]>([]);
   const prevKey = useRef<string>(null);
   const { setParams } = useBrowserContext();
+  const dispatch = useAppDispatch();
 
   // Generate route lookup on initial render
   useLayoutEffect(() => {
@@ -53,9 +37,7 @@ export default function AppRouter({
     if (cacheEnabled) {
       // Add route to currentRoutes, replacing an existing route if the componentID matches
       setCurrentRoutes((prevRoutes) => {
-        const routeIndex = prevRoutes.findIndex(
-          (r) => r.componentID === route.componentID
-        );
+        const routeIndex = prevRoutes.findIndex((r) => r.componentID === route.componentID);
 
         const updatedRoutes = [...prevRoutes];
 
@@ -81,9 +63,12 @@ export default function AppRouter({
 
     if (route && route.action) {
       fetchData(route.action).then(() => {
+        dispatch(updateTargetRoute(pathname));
         updateUI(params, route);
       });
     } else if (route) {
+      dispatch(updateTargetRoute(pathname));
+
       updateUI(params, route);
     }
   };

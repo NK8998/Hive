@@ -23,16 +23,6 @@
   top: 0;
 }
 
-.guide{
-  width: 240px;
-  min-width: 240px;
-  max-width: 240px;
-  height: calc(100vh - 56px);
-  background-color: rgb(63, 63, 63);
-  position: sticky;
-  top: 56px;
-  z-index: 10;
-}
 
 .page-manager{
   flex: 1;
@@ -47,7 +37,7 @@
   flex-direction: column;
   gap: 10px;
   text-align: center;
-  height: 700px;
+  height: fit-content;
 }
 
 .logo {
