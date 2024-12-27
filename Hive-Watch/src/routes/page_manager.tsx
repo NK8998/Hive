@@ -24,8 +24,18 @@ export default function PageManager() {
   return (
     <div className='page-manager'>
       <AppRouter cacheEnabled>
-        <Route element={<Home />} path='/' prefetch action={() => handleAction(fetchVideos)} />
-        <Route element={<Watch />} path='/watch' prefetch action={() => handleAction(fetchSelectedVideo)} />
+        <Route
+          element={<Home />}
+          path='/'
+          prefetch
+          action={() => handleAction(fetchVideos)}
+        />
+        <Route
+          element={<Watch />}
+          path='/watch'
+          prefetch
+          action={() => handleAction(fetchSelectedVideo)}
+        />
         <Route element={<Channel />} path='/:channelName' prefetch>
           <Route element={<Features />} path={`:featured`} index prefetch />
           <Route element={<Videos />} path={`videos/more`} prefetch>
