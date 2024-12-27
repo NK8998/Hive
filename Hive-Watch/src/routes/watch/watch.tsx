@@ -1,12 +1,8 @@
-import Link from "../../AppRouter/components/Link";
-import { useLocation } from "../../AppRouter/components/Provider";
 import Player from "./components/player/player";
 import Secondary from "./components/secondary_content/secondary_content";
 import "./watch.css";
 
 export default function Watch() {
-  const { search } = useLocation();
-
   const video = {
     aspect_ratio: 2.406,
     captions_url: null,
@@ -30,14 +26,21 @@ export default function Watch() {
     has_subtitles: false,
     id: 47,
     likes: 0,
-    mpd_url: "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/chunks/output.mpd",
+    mpd_url:
+      "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/chunks/output.mpd",
     palette_urls: {
-      "palleteUrl-0": "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_001_palette.jpeg",
-      "palleteUrl-1": "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_002_palette.jpeg",
-      "palleteUrl-2": "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_003_palette.jpeg",
-      "palleteUrl-3": "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_004_palette.jpeg",
-      "palleteUrl-4": "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_005_palette.jpeg",
-      "palleteUrl-5": "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_006_palette.jpeg",
+      "palleteUrl-0":
+        "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_001_palette.jpeg",
+      "palleteUrl-1":
+        "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_002_palette.jpeg",
+      "palleteUrl-2":
+        "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_003_palette.jpeg",
+      "palleteUrl-3":
+        "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_004_palette.jpeg",
+      "palleteUrl-4":
+        "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_005_palette.jpeg",
+      "palleteUrl-5":
+        "https://d38x8ofmpjmibw.cloudfront.net/Od7PbjTYPJi/palletes/batch_006_palette.jpeg",
     },
     pfp_url:
       "https://d12mwy5skngt8m.cloudfront.net/ISaSW2bq0PcmxxsejrESu81eUff2/ISaSW2bq0PcmxxsejrESu81eUff2u.png",

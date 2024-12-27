@@ -20,7 +20,8 @@ export default function Player({ videoDetails }: VideoDetailsProps) {
 
 export function PlayerContent({ videoDetails }: VideoDetailsProps) {
   const { video_id } = videoDetails;
-  const { attatchPlayer, detachPlayer, _videoDetails, setVideoDetails } = usePlayerContext();
+  const { attatchPlayer, detachPlayer, _videoDetails, setVideoDetails } =
+    usePlayerContext();
   const { targetRoute } = useAppSelector((state) => state.app);
   const isWatchPage = targetRoute === "/watch";
 

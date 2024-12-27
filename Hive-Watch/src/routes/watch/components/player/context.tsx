@@ -1,5 +1,9 @@
 import { createContext, useContext, useRef, useState } from "react";
-import { Chapter, PlayerContextProps, VideoDetails } from "../../../../types/player_types";
+import {
+  Chapter,
+  PlayerContextProps,
+  VideoDetails,
+} from "../../../../types/player_types";
 import { shakaTyped } from "./utils/typed_shaka";
 
 const PlayerContext = createContext<PlayerContextProps | null>(null);
@@ -12,12 +16,21 @@ export const PlayerProvider = ({ children }: any) => {
 
   const attatchPlayer = async () => {
     await detachPlayer();
-    const videoElement = document.querySelector(".html5-player") as HTMLVideoElement;
-    const captionContainer = document.querySelector(".captions-container-relative") as HTMLDivElement;
+    const videoElement = document.querySelector(
+      ".html5-player"
+    ) as HTMLVideoElement;
+    const captionContainer = document.querySelector(
+      ".captions-container-relative"
+    ) as HTMLDivElement;
 
     const manifestUri = _videoDetails?.mpd_url || "";
 
-    if (manifestUri.length === 0 || !manifestUri.includes("http") || !videoElement || !captionContainer)
+    if (
+      manifestUri.length === 0 ||
+      !manifestUri.includes("http") ||
+      !videoElement ||
+      !captionContainer
+    )
       return;
 
     shakaTyped.polyfill.installAll();
@@ -77,12 +90,14 @@ export const PlayerProvider = ({ children }: any) => {
   }
 
   async function detachPlayer() {
-    const captionContainer = document.querySelector(".captions-container-relative") as HTMLDivElement;
+    const captionContainer = document.querySelector(
+      ".captions-container-relative"
+    ) as HTMLDivElement;
 
     if (player && captionContainer) {
-      // while (captionContainer.firstChild) {
-      //   captionContainer.removeChild(captionContainer.firstChild);
-      // }
+      while (captionContainer.firstChild) {
+        captionContainer.removeChild(captionContainer.firstChild);
+      }
       setPlayer(null);
       await player.unload();
     }
