@@ -86,8 +86,9 @@ export const useNavigate = () => {
 export const AppRouterProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  //
   const [params, setParams] = useState<Record<string, any> | null>(null);
-
+  //
   const [location, setLocation] = useState({
     origin: window.location.origin,
     pathname: window.location.pathname,

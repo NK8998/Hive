@@ -12,5 +12,9 @@ export default function Chapters() {
     setChapters(generateChapters(description, duration));
   }, [_videoDetails]);
 
+  useEffect(() => {
+    console.log(chapters);
+  }, [chapters]);
+
   return <div className='chapters-container'></div>;
 }

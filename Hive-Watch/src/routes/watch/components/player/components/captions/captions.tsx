@@ -6,7 +6,8 @@ export default function Captions() {
   const { player } = usePlayerContext();
 
   useEffect(() => {
-    document.addEventListener("keyup", (e) => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!player) return;
       if (e.key.toLocaleLowerCase() === "c") {
         const captions_url =
           "https://getting-started8998.s3.ap-south-1.amazonaws.com/HLQKrW-rqrf/captions/captions.vtt";
@@ -20,7 +21,12 @@ export default function Captions() {
           });
         player?.setTextTrackVisibility(true);
       }
-    });
+    };
+    document.addEventListener("keypress", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keypress", handleKeyPress);
+    };
   }, [player]);
   return (
     <div className='captions-container-absolute'>

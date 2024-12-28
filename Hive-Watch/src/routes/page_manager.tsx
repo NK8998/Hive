@@ -1,7 +1,5 @@
-import { useCallback } from "react";
 import AppRouter from "../AppRouter/AppRouter";
 import NotFound from "../AppRouter/components/404/NotFound";
-import { useLocation } from "../AppRouter/components/Provider";
 import Route from "../AppRouter/components/Route";
 import { useAppDispatch } from "../store/hooks/hooks";
 import { fetchVideos } from "../store/routes/home/actions";

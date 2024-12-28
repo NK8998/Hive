@@ -69,6 +69,7 @@ export function generateRouteLookup(
     parentPath = "",
     parentFullPath: string | null = null
   ): RouteEntry[] {
+    //
     const elements = Children.toArray(children).filter(
       (child): child is ReactElement<RouteProps> =>
         React.isValidElement<RouteProps>(child) &&

@@ -19,11 +19,7 @@ export const matchRoute = (
   let indexChildId = "";
 
   // Main loop to check each route
-  const looper = (
-    routes: RouteEntry[],
-    urlPath: string,
-    nested = false
-  ) => {
+  const looper = (routes: RouteEntry[], urlPath: string, nested = false) => {
     for (const route of routes) {
       const { fullPath, children, partialPath } = route;
 
@@ -42,28 +38,22 @@ export const matchRoute = (
 
       // if no route matches then 404 page displayed and is always last in the array of routes
       if (
-        (normalizedUrlPath === replacedUrl ||
-          partialPath === "/*") &&
+        (normalizedUrlPath === replacedUrl || partialPath === "/*") &&
         !foundRoute
       ) {
         route.isActive = true;
         route.isVisited = true;
         foundRoute = currentTopLevelParent;
-        const indexChild = children.find(
-          (child) => child.index
-        );
+        const indexChild = children.find((child) => child.index);
         if (indexChild) {
           // doing this so index child isn't reset to inactive
-          indexChildId = indexChild?.componentID;
+          indexChildId = indexChild.componentID;
 
           indexChild.isActive = true;
           indexChild.isVisited = true;
         }
       }
-      if (
-        children.length > 0 &&
-        urlPath.includes(replacedUrl)
-      ) {
+      if (children.length > 0 && urlPath.includes(replacedUrl)) {
         if (!foundRoute) {
           // to ensure all routes in the hierachy till the current route are active
           route.isActive = true;
@@ -73,9 +63,7 @@ export const matchRoute = (
       }
     }
 
-    let route = foundRoute
-      ? foundRoute
-      : currentTopLevelParent;
+    let route = foundRoute ? foundRoute : currentTopLevelParent;
     return { route, params };
   };
 
