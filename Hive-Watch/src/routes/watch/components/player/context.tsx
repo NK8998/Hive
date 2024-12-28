@@ -12,14 +12,19 @@ export const PlayerProvider = ({ children }: any) => {
   const [_videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
   const [player, setPlayer] = useState<shaka.Player | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [playerScope, setPlayerScope] = useState<string | null>(null);
   const attempts = useRef(0);
 
   const attatchPlayer = async () => {
     await detachPlayer();
-    const videoElement = document.querySelector(
+    const playerContainer = document.querySelector(
+      `.html5-player-container[data-scope="${playerScope}"]`
+    );
+    if (!playerContainer) return;
+    const videoElement = playerContainer.querySelector(
       ".html5-player"
     ) as HTMLVideoElement;
-    const captionContainer = document.querySelector(
+    const captionContainer = playerContainer.querySelector(
       ".captions-container-relative"
     ) as HTMLDivElement;
 
@@ -90,16 +95,21 @@ export const PlayerProvider = ({ children }: any) => {
   }
 
   async function detachPlayer() {
-    const captionContainer = document.querySelector(
+    const playerContainer = document.querySelector(
+      `.html5-player-container[data-scope="${playerScope}"]`
+    );
+    if (!playerContainer) return;
+    const captionContainer = playerContainer.querySelector(
       ".captions-container-relative"
     ) as HTMLDivElement;
 
     if (player && captionContainer) {
+      await player.unload();
+
       while (captionContainer.firstChild) {
         captionContainer.removeChild(captionContainer.firstChild);
       }
       setPlayer(null);
-      await player.unload();
     }
   }
 
@@ -112,6 +122,8 @@ export const PlayerProvider = ({ children }: any) => {
         setVideoDetails,
         chapters,
         setChapters,
+        playerScope,
+        setPlayerScope,
         attatchPlayer,
         detachPlayer,
       }}

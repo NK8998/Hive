@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { usePlayerContext } from "../../context";
 import "./captions.css";
+import { usePlayerContext } from "../../context";
 
 export default function Captions() {
   const { player } = usePlayerContext();

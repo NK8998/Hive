@@ -1,9 +1,5 @@
 import { nanoid } from "nanoid";
-import React, {
-  Children,
-  ReactElement,
-  ReactNode,
-} from "react";
+import React, { Children, ReactElement, ReactNode } from "react";
 import { Dispatch } from "@reduxjs/toolkit";
 import { RootState } from "../../store/store";
 
@@ -14,6 +10,7 @@ interface RouteProps {
   prefetch?: boolean;
   action?: (...args: any[]) => Promise<void>;
   index?: boolean;
+  classList?: string;
 }
 
 export interface RouteEntry {
@@ -25,10 +22,7 @@ export interface RouteEntry {
     ...args: any
   ) =>
     | Promise<void>
-    | ((
-        dispatch: Dispatch,
-        getState: RootState
-      ) => Promise<void>);
+    | ((dispatch: Dispatch, getState: RootState) => Promise<void>);
   isVisited: boolean;
   parent: string | null;
   isActive: boolean;
@@ -36,6 +30,7 @@ export interface RouteEntry {
   componentID: string;
   index: boolean;
   cacheEnabled: boolean;
+  classList: string;
 }
 
 export function generateRouteLookup(
@@ -46,9 +41,7 @@ export function generateRouteLookup(
 ): RouteEntry[] {
   //
   // sort first
-  function sortRoutesFirst(
-    unsortedChildren: ReactElement<RouteProps>[]
-  ) {
+  function sortRoutesFirst(unsortedChildren: ReactElement<RouteProps>[]) {
     unsortedChildren.sort((a, b) => {
       const aHasColon = a.props.path.includes(":");
       const bHasColon = b.props.path.includes(":");
@@ -65,11 +58,7 @@ export function generateRouteLookup(
       }
 
       // Otherwise, if both have or don't have ':', they stay in the same order
-      return aHasColon === bHasColon
-        ? 0
-        : aHasColon
-        ? 1
-        : -1;
+      return aHasColon === bHasColon ? 0 : aHasColon ? 1 : -1;
     });
   }
   // sort first
@@ -87,9 +76,7 @@ export function generateRouteLookup(
         child.type.name === "Route" // Explicitly check type.name
     );
 
-    if (
-      elements.length !== Children.toArray(children).length
-    ) {
+    if (elements.length !== Children.toArray(children).length) {
       throw new Error(
         "Unsupported child detected. Ensure all children are Route components."
       );
@@ -103,10 +90,7 @@ export function generateRouteLookup(
       const childPath = child.props.path.startsWith("/")
         ? child.props.path
         : `/${child.props.path}`;
-      const fullPath = `${parentPath}${childPath}`.replace(
-        /\/+/g,
-        "/"
-      );
+      const fullPath = `${parentPath}${childPath}`.replace(/\/+/g, "/");
 
       const route: RouteEntry = {
         fullPath,
@@ -121,6 +105,7 @@ export function generateRouteLookup(
         componentID: nanoid(8),
         children: [],
         cacheEnabled,
+        classList: child.props.classList ?? "",
       };
 
       if (child.props.children) {
@@ -137,10 +122,5 @@ export function generateRouteLookup(
     return routes;
   }
 
-  return processRoutes(
-    children,
-    cacheEnabled,
-    parentPath,
-    parentFullPath
-  );
+  return processRoutes(children, cacheEnabled, parentPath, parentFullPath);
 }

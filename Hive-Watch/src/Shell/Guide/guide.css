@@ -57,6 +57,8 @@
 /* regular page styles */
 .main-guide-outer{
     width: fit-content;
+    position: sticky;
+    top: 56px;
 }
 
 .main-guide{

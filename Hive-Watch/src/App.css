@@ -1,11 +1,21 @@
+:root{
+  --fullScreenHeight: 100%;
+  --fullScreenWidth: 100%;
+  --normalPlayerWidth: 100%;
+  --normalPlayerHeight: 100%;
+  --theatreWidth: 100%;
+  --theatreHeight: 100%;
+}
+
 #root {
   width: 100%;
 
 }
-.hvd-app{
+#hvd-app{
   width: 100%;
   height: fit-content;
   max-height: 100vh;
+  min-height: 100vh;
   overflow-y: scroll;
   position: relative;
 }
@@ -15,15 +25,6 @@
   gap: 10px;
 }
 
-.masthead{
-  height: 56px;
-  width: 100%;
-  background-color: grey;
-  position: sticky;
-  top: 0;
-}
-
-
 .page-manager{
   flex: 1;
   min-width: 0;
@@ -31,13 +32,8 @@
 
 }
 
-.browser{
+.hvd-app-browse{
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: center;
-  height: fit-content;
 }
 
 .logo {

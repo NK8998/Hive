@@ -1,12 +1,14 @@
-.html5-player-container{
-    --normalPlayerWidth: 0;
-    --normalPlayerHeight: 0;
-    --theatreModeWidth: 0;
-    --theatreModeHeight: 0;
+.html5-player-container[data-scope="watch-page"]{
     position: relative;
+    width: var(--normalPlayerWidth);
+    height: var(--normalPlayerHeight);
+    z-index: 10;
 }
 
-video{
+.html5-player-container[data-scope="watch-page"] video{
+
     width: 100%;
-    margin: auto;
+    height: 100%;
+    object-fit: cover;
+    
 }

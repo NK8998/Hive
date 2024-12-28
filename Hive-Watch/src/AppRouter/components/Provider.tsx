@@ -3,7 +3,6 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useRef,
   useLayoutEffect,
 } from "react";
 import { nanoid } from "nanoid";
@@ -15,29 +14,31 @@ export type AppRouterContextType = {
   location: {
     origin: string;
     pathname: string;
+    pathWithSearch: string;
     search: string;
     key: string;
   };
   setLocation: (newLocation: {
     origin: string;
     pathname: string;
+    pathWithSearch: string;
     search: string;
     key: string;
   }) => void;
+  targetRoute: string;
+  setTargetRoute: (...args: any) => void;
 };
 
 // Create the context
-export const AppRouterContext = createContext<
-  AppRouterContextType | undefined
->(undefined);
+export const AppRouterContext = createContext<AppRouterContextType | undefined>(
+  undefined
+);
 
 // Custom hook to use params
 export const useParams = () => {
   const context = useContext(AppRouterContext);
   if (!context) {
-    throw new Error(
-      "useParams must be used within a ParamsProvider"
-    );
+    throw new Error("useParams must be used within a ParamsProvider");
   }
   return context.params;
 };
@@ -46,9 +47,7 @@ export const useParams = () => {
 export const useLocation = () => {
   const context = useContext(AppRouterContext);
   if (!context) {
-    throw new Error(
-      "useLocation must be used within a ParamsProvider"
-    );
+    throw new Error("useLocation must be used within a ParamsProvider");
   }
   return { ...context.location };
 };
@@ -57,18 +56,16 @@ export const useBrowserContext = () => {
   const context = useContext(AppRouterContext);
 
   if (!context) {
-    throw new Error(
-      "useLocation must be used within a ParamsProvider"
-    );
+    throw new Error("useLocation must be used within a ParamsProvider");
   }
   return context;
 };
 
 export const useNavigate = () => {
-  const { pathname } = useLocation();
+  const { pathname, pathWithSearch } = useLocation();
 
   const navigate = (path: string) => {
-    if (path === pathname) return;
+    if (path === pathname || path === pathWithSearch) return;
     if (typeof path !== "string" || path.trim() === "") {
       console.warn("Invalid path passed to navigate.");
       return;
@@ -89,19 +86,18 @@ export const useNavigate = () => {
 export const AppRouterProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [params, setParams] = useState<Record<
-    string,
-    any
-  > | null>(null);
+  const [params, setParams] = useState<Record<string, any> | null>(null);
 
   const [location, setLocation] = useState({
     origin: window.location.origin,
     pathname: window.location.pathname,
     search: window.location.search,
-    key: nanoid(7), // Unique key
+    pathWithSearch: window.location.pathname + window.location.search,
+    key: nanoid(7),
   });
-  const [currentFullPath, setCurrentFullPath] =
-    useState("");
+
+  // use this so that ui updates are syncronized when prefetching is enabled
+  const [targetRoute, setTargetRoute] = useState(window.location.pathname);
 
   useEffect(() => {
     const updateLocation = () => {
@@ -109,14 +105,14 @@ export const AppRouterProvider: React.FC<{
         origin: window.location.origin,
         pathname: window.location.pathname,
         search: window.location.search,
+        pathWithSearch: window.location.pathname + window.location.search,
         key: nanoid(7),
       });
     };
 
     // Wrap pushState and replaceState to detect programmatic navigation
     const originalPushState = window.history.pushState;
-    const originalReplaceState =
-      window.history.replaceState;
+    const originalReplaceState = window.history.replaceState;
 
     window.history.pushState = function (...args) {
       originalPushState.apply(window.history, args);
@@ -135,10 +131,7 @@ export const AppRouterProvider: React.FC<{
     return () => {
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
-      window.removeEventListener(
-        "popstate",
-        updateLocation
-      );
+      window.removeEventListener("popstate", updateLocation);
     };
   }, []);
 
@@ -149,8 +142,8 @@ export const AppRouterProvider: React.FC<{
         setParams,
         location,
         setLocation,
-        currentFullPath,
-        setCurrentFullPath,
+        targetRoute,
+        setTargetRoute,
       }}
     >
       {children}
@@ -160,12 +153,8 @@ export const AppRouterProvider: React.FC<{
 
 export const ComponentContext = createContext(null);
 
-export const ComponentProvider = ({
-  children,
-  initialValue,
-}) => {
-  const [routeChildren, setRouteChildren] =
-    useState(initialValue);
+export const ComponentProvider = ({ children, initialValue }: any) => {
+  const [routeChildren, setRouteChildren] = useState(initialValue);
   useLayoutEffect(() => {
     setRouteChildren(initialValue);
   }, [initialValue]);

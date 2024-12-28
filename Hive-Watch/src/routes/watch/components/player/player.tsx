@@ -1,28 +1,44 @@
 // Should be reusable
 
 import { useEffect } from "react";
-import { VideoDetailsProps } from "../../../../types/player_types";
+import { VideoDetails } from "../../../../types/player_types";
 import "./player.css";
+
+import { useBrowserContext } from "../../../../AppRouter/components/Provider";
 import { PlayerProvider, usePlayerContext } from "./context";
 import Captions from "./components/captions/captions";
 import Chapters from "./components/chapters/chapters";
 import VideoEl from "./components/videoEl/videoEl";
-import { useAppSelector } from "../../../../store/hooks/hooks";
 import BottomControls from "./components/bottom_controls/bottom_controls";
 
-export default function Player({ videoDetails }: VideoDetailsProps) {
+interface playerProps {
+  videoDetails: VideoDetails | null;
+  scope: string;
+}
+
+export default function Player({ videoDetails, scope }: playerProps) {
   return (
     <PlayerProvider>
-      <PlayerContent videoDetails={videoDetails} />
+      <PlayerContent videoDetails={videoDetails} scope={scope} />
     </PlayerProvider>
   );
 }
 
-export function PlayerContent({ videoDetails }: VideoDetailsProps) {
-  const { video_id } = videoDetails;
-  const { attatchPlayer, detachPlayer, _videoDetails, setVideoDetails } =
-    usePlayerContext();
-  const { targetRoute } = useAppSelector((state) => state.app);
+interface playerContentProps {
+  videoDetails: VideoDetails | null;
+  scope: string;
+}
+
+export function PlayerContent({ videoDetails, scope }: playerContentProps) {
+  const {
+    attatchPlayer,
+    detachPlayer,
+    _videoDetails,
+    setVideoDetails,
+    playerScope,
+    setPlayerScope,
+  } = usePlayerContext();
+  const { targetRoute } = useBrowserContext();
   const isWatchPage = targetRoute === "/watch";
 
   useEffect(() => {
@@ -35,10 +51,13 @@ export function PlayerContent({ videoDetails }: VideoDetailsProps) {
 
   useEffect(() => {
     setVideoDetails(videoDetails);
-  }, [video_id]);
+    setPlayerScope(scope);
+  }, [videoDetails?.video_id]);
+
+  if (!videoDetails || !playerScope) return null;
 
   return (
-    <div className='html5-player-container'>
+    <div className='html5-player-container' data-scope={scope}>
       <Captions />
       <Chapters />
       <VideoEl />

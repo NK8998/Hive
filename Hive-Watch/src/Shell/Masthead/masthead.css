@@ -1,0 +1,9 @@
+.masthead{
+    height: 56px;
+    width: 100%;
+    background-color: grey;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  

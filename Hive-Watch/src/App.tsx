@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import "./App.css";
-import PageManager from "./Routes/page_manager";
-import Guide from "./Shell/Guide/guide";
-import Masthead from "./Shell/Masthead/masthead";
+import PageManager from "./routes/page_manager";
+import Guide from "./shell/guide/guide";
+import Masthead from "./shell/masthead/masthead";
 import { useAppDispatch } from "./store/hooks/hooks";
 import { updateWindowWidth } from "./store/app/slice";
 
@@ -15,13 +15,13 @@ function App() {
     });
   }, []);
   return (
-    <div className='hvd-app'>
+    <>
       <Masthead />
       <div className='hvd-app-flexy'>
         <Guide />
         <PageManager />
       </div>
-    </div>
+    </>
   );
 }
 

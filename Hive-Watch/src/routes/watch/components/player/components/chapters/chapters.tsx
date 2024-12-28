@@ -1,6 +1,6 @@
 import { useEffect } from "react";
+import generateChapters from "../../utils/generate_chapters";
 import { usePlayerContext } from "../../context";
-import generateChapters from "../../utils/generateChapters";
 
 export default function Chapters() {
   const { _videoDetails, chapters, setChapters } = usePlayerContext();

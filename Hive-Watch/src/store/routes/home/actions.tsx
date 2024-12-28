@@ -3,9 +3,10 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { updateInitialFetch } from "./slice";
 import { RootState } from "../../store";
 
-export const fetchVideos = (pathname: string, search: string) => {
+export const fetchVideos = () => {
   return async (dispatch: Dispatch, getState: RootState) => {
     await new Promise((resolve) => {
+      const { pathname, search } = window.location;
       setTimeout(() => {
         console.log(pathname, search);
 

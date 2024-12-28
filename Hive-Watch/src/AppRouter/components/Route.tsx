@@ -8,7 +8,11 @@ export interface RouteProps {
   fullPath?: string;
   partialPath?: string;
   timeout?: number | null;
-  action?: (...args: any) => Promise<void> | ((dispatch: Dispatch, getState: RootState) => Promise<void>);
+  action?: (
+    ...args: any
+  ) =>
+    | Promise<void>
+    | ((dispatch: Dispatch, getState: RootState) => Promise<void>);
   prefetch?: boolean;
   isVisited?: boolean;
   isActive?: boolean;
@@ -17,17 +21,26 @@ export interface RouteProps {
   componentID?: string;
   index?: boolean;
   cacheEnabled?: boolean;
+  classList?: string;
 }
 
-export default function Route({ element, cacheEnabled, isVisited, isActive, children }: RouteProps) {
-  // console.log({ isVisited, isActive });
+export default function Route({
+  element,
+  cacheEnabled,
+  isVisited,
+  isActive,
+  classList,
+}: RouteProps) {
   if (cacheEnabled) {
     return isVisited ? (
-      <div className='route-wrapper' hidden={!isActive}>
+      <div
+        className={`${classList ? classList : ""} hvd-browse`}
+        hidden={!isActive}
+      >
         {element}
       </div>
     ) : null;
   } else {
-    return isActive ? element : null;
+    return isActive ? <div className='hvd-browse'> {element}</div> : null;
   }
 }

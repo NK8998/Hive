@@ -56,7 +56,7 @@ export interface VideoDetails {
 }
 
 export interface VideoDetailsProps {
-  videoDetails: VideoDetails;
+  videoDetails: VideoDetails | null;
 }
 
 export interface PlayerContextProps {
@@ -66,6 +66,8 @@ export interface PlayerContextProps {
   setVideoDetails: React.Dispatch<React.SetStateAction<VideoDetails | null>>;
   chapters: Chapter[];
   setChapters: React.Dispatch<React.SetStateAction<Chapter[]>>;
+  playerScope: string | null;
+  setPlayerScope: React.Dispatch<React.SetStateAction<string | null>>;
   attatchPlayer: (...args: any) => void;
   detachPlayer: (...args: any[]) => void;
 }
