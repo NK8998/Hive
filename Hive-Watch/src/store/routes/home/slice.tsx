@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const homeSlice = createSlice({
-  name: "counter",
+  name: "home",
   initialState: {
     initialFetch: [],
   },

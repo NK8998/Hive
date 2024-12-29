@@ -1,10 +1,9 @@
 // Should be reusable
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { VideoDetails } from "../../../../types/player_types";
 import "./player.css";
 
-import { useBrowserContext } from "../../../../AppRouter/components/Provider";
 import { PlayerProvider, usePlayerContext } from "./context";
 import Captions from "./components/captions/captions";
 import Chapters from "./components/chapters/chapters";
@@ -18,46 +17,26 @@ interface playerProps {
 
 export default function Player({ videoDetails, scope }: playerProps) {
   return (
-    <PlayerProvider>
-      <PlayerContent videoDetails={videoDetails} scope={scope} />
+    <PlayerProvider initialDetails={videoDetails} scope={scope}>
+      <PlayerContent />
     </PlayerProvider>
   );
 }
 
-interface playerContentProps {
-  videoDetails: VideoDetails | null;
-  scope: string;
-}
-
-export function PlayerContent({ videoDetails, scope }: playerContentProps) {
-  const {
-    attatchPlayer,
-    detachPlayer,
-    _videoDetails,
-    setVideoDetails,
-    playerScope,
-    setPlayerScope,
-  } = usePlayerContext();
-  const { targetRoute } = useBrowserContext();
-  const isWatchPage = targetRoute === "/watch";
+export function PlayerContent({}) {
+  const { player, loadManifest, unloadManifest, _videoDetails, playerScope } =
+    usePlayerContext();
 
   useEffect(() => {
-    if (_videoDetails && isWatchPage) {
-      attatchPlayer();
-    } else if (!isWatchPage) {
-      detachPlayer();
+    if (_videoDetails) {
+      loadManifest();
+    } else {
+      unloadManifest();
     }
-  }, [_videoDetails, targetRoute]);
-
-  useEffect(() => {
-    setVideoDetails(videoDetails);
-    setPlayerScope(scope);
-  }, [videoDetails?.video_id]);
-
-  if (!videoDetails || !playerScope) return null;
+  }, [_videoDetails, player]);
 
   return (
-    <div className='html5-player-container' data-scope={scope}>
+    <div className='html5-player-container' data-scope={playerScope}>
       <Captions />
       <Chapters />
       <VideoEl />

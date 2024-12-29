@@ -30,7 +30,7 @@ export const matchRoute = (
         route.isActive = false;
       }
 
-      const replacedUrl = replaceDynamicParts(
+      const { replacedUrl, urlParams } = replaceDynamicParts(
         fullPath,
         normalizedUrlPath,
         params
@@ -52,6 +52,7 @@ export const matchRoute = (
           indexChild.isActive = true;
           indexChild.isVisited = true;
         }
+        params = urlParams;
       }
       if (children.length > 0 && urlPath.includes(replacedUrl)) {
         if (!foundRoute) {
@@ -64,6 +65,7 @@ export const matchRoute = (
     }
 
     let route = foundRoute ? foundRoute : currentTopLevelParent;
+
     return { route, params };
   };
 

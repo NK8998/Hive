@@ -13,7 +13,7 @@ export default function Chapters() {
   }, [_videoDetails]);
 
   useEffect(() => {
-    console.log(chapters);
+    // console.log(chapters);
   }, [chapters]);
 
   return <div className='chapters-container'></div>;

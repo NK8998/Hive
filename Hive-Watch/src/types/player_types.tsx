@@ -59,6 +59,12 @@ export interface VideoDetailsProps {
   videoDetails: VideoDetails | null;
 }
 
+export interface PlayerElements {
+  playerContainer?: HTMLDivElement;
+  captionsContainer?: HTMLDivElement;
+  videoElement?: HTMLVideoElement;
+}
+
 export interface PlayerContextProps {
   player: shaka.Player | null;
   setPlayer: React.Dispatch<React.SetStateAction<shaka.Player | null>>;
@@ -66,10 +72,11 @@ export interface PlayerContextProps {
   setVideoDetails: React.Dispatch<React.SetStateAction<VideoDetails | null>>;
   chapters: Chapter[];
   setChapters: React.Dispatch<React.SetStateAction<Chapter[]>>;
-  playerScope: string | null;
-  setPlayerScope: React.Dispatch<React.SetStateAction<string | null>>;
-  attatchPlayer: (...args: any) => void;
-  detachPlayer: (...args: any[]) => void;
+  playerScope: string;
+  setPlayerScope: React.Dispatch<React.SetStateAction<string>>;
+  loadManifest: (...args: any) => void;
+  unloadManifest: (...args: any[]) => void;
+  getPlayerElements: () => PlayerElements;
 }
 
 export interface Chapter {

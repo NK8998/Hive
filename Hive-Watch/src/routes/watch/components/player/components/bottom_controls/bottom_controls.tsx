@@ -2,20 +2,14 @@ import { useEffect } from "react";
 import { usePlayerContext } from "../../context";
 
 export default function BottomControls() {
-  const { player, playerScope } = usePlayerContext();
+  const { player, playerScope, getPlayerElements } = usePlayerContext();
 
   useEffect(() => {
     const handleSpaceClick = (e: KeyboardEvent) => {
       e.preventDefault();
-      const playerContainer = document.querySelector(
-        `.html5-player-container[data-scope="${playerScope}"]`
-      );
+      const { videoElement } = getPlayerElements();
 
-      if (!playerContainer) return;
-
-      const videoElement = playerContainer.querySelector(
-        ".html5-player"
-      ) as HTMLVideoElement;
+      if (!videoElement) return;
 
       if (e.key === " ") {
         videoElement.paused ? videoElement.play() : videoElement.pause();

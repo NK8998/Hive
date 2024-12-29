@@ -1,0 +1,5 @@
+.channel.hvd-browse{
+    max-width: calc(100% - 20px);
+    padding: 0 20px;
+    margin: auto;
+}

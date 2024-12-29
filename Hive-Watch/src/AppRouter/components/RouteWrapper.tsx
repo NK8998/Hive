@@ -3,9 +3,7 @@ import { RouteEntry } from "./generateRouteLookup";
 import { ComponentProvider } from "./Provider";
 import Route from "./Route";
 
-export default function routeWrapper(
-  children: RouteEntry[]
-): JSX.Element[] {
+export default function routeWrapper(children: RouteEntry[]): JSX.Element[] {
   const wrapWithProvider = (children: RouteEntry[]) => {
     return children.map((child, i) => {
       // Check if the child is a Route component
@@ -16,8 +14,9 @@ export default function routeWrapper(
 
       return (
         <ComponentProvider
-          initialValue={wrappedChildren}
+          _routeChildren={wrappedChildren}
           key={child.componentID}
+          _isHidden={child.isActive}
         >
           <Route
             {...(child as any)}

@@ -1,6 +1,7 @@
 import { useParams } from "../../AppRouter/components/Provider";
 import Link from "../../AppRouter/components/Link";
 import OutLet from "../../AppRouter/components/Outlet";
+import "./channel.css";
 
 export default function Channel() {
   const params = useParams();
@@ -12,11 +13,9 @@ export default function Channel() {
       <h3>{params?.subRoute}</h3>
       <div className='route-handler'>
         <Link to={`/${params?.channelName}/featured`}>featured</Link>
-        <Link to={`/${params?.channelName}/videos/more`}>videos</Link>
-        <Link to={`/${params?.channelName}/videos/more/inner`}>
-          videos inner
-        </Link>
-        <Link to={`/${params?.channelName}/videos/more/inner/someId`}>
+        <Link to={`/${params?.channelName}/videos`}>videos</Link>
+        <Link to={`/${params?.channelName}/videos/inner`}>videos inner</Link>
+        <Link to={`/${params?.channelName}/videos/inner/someId`}>
           videos inner2
         </Link>
       </div>

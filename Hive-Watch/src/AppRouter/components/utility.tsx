@@ -29,5 +29,8 @@ export const replaceDynamicParts = (
   const resultString = "/" + resultParts.join("/");
 
   // Return the final transformed string
-  return resultString === "/" ? "/" : resultString.replace(/\/$/, "");
+  const replacedUrl =
+    resultString === "/" ? "/" : resultString.replace(/\/$/, "");
+
+  return { replacedUrl, urlParams: params };
 };

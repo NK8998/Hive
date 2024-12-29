@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useLayoutEffect,
+  ReactNode,
 } from "react";
 import { nanoid } from "nanoid";
 
@@ -152,16 +153,32 @@ export const AppRouterProvider: React.FC<{
   );
 };
 
-export const ComponentContext = createContext(null);
+interface ComponentContextProps {
+  routeChildren: any;
+  isHidden: boolean;
+}
 
-export const ComponentProvider = ({ children, initialValue }: any) => {
-  const [routeChildren, setRouteChildren] = useState(initialValue);
-  useLayoutEffect(() => {
-    setRouteChildren(initialValue);
-  }, [initialValue]);
+export const ComponentContext = createContext<ComponentContextProps | null>(
+  null
+);
+
+export const ComponentProvider = ({
+  children,
+  _routeChildren,
+  _isHidden,
+}: any) => {
+  const [routeChildren, setRouteChildren] = useState(_routeChildren);
+  const [isHidden, setIShidden] = useState(!_isHidden);
+
+  useEffect(() => {
+    setIShidden(!_isHidden);
+  }, [_isHidden]);
+  useEffect(() => {
+    setRouteChildren(_routeChildren);
+  }, [_routeChildren]);
 
   return (
-    <ComponentContext.Provider value={{ routeChildren }}>
+    <ComponentContext.Provider value={{ routeChildren, isHidden }}>
       {children}
     </ComponentContext.Provider>
   );

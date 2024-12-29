@@ -16,7 +16,10 @@ export const watchSlice = createSlice({
   initialState,
   reducers: {
     // Typing the action payload
-    updateSelectedVideo: (state, action: PayloadAction<VideoDetails>) => {
+    updateSelectedVideo: (
+      state,
+      action: PayloadAction<VideoDetails | null>
+    ) => {
       state.selectedVideo = action.payload;
     },
   },

@@ -2,10 +2,11 @@ import AppRouter from "../AppRouter/AppRouter";
 import NotFound from "../AppRouter/components/404/NotFound";
 import Route from "../AppRouter/components/Route";
 import { useAppDispatch } from "../store/hooks/hooks";
+import { fetchfeaturedContent } from "../store/routes/channel/actions";
 import { fetchVideos } from "../store/routes/home/actions";
 import { fetchSelectedVideo } from "../store/routes/watch/actions";
 import Channel from "./channel/channel";
-import Features from "./channel/sub_routes/features";
+import Featured from "./channel/sub_routes/featured/featured";
 import Inner from "./channel/sub_routes/inner";
 import Inner2 from "./channel/sub_routes/inner2";
 import Videos from "./channel/sub_routes/videos";
@@ -40,10 +41,11 @@ export default function PageManager() {
           element={<Channel />}
           path='/:channelName'
           classList='channel'
+          action={() => handleAction(fetchfeaturedContent)}
           prefetch
         >
-          <Route element={<Features />} path={`:featured`} index prefetch />
-          <Route element={<Videos />} path={`videos/more`} prefetch>
+          <Route element={<Featured />} path={`:featured`} index prefetch />
+          <Route element={<Videos />} path={`videos`} prefetch>
             <Route element={<Inner />} path={"inner"} prefetch>
               <Route element={<Inner2 />} path={":inner2"} prefetch />
               <Route element={<Inner />} path='/shouldwork' prefetch />

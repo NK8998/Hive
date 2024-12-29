@@ -1,4 +1,11 @@
-import { createContext, useContext, useRef, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Chapter,
   PlayerContextProps,
@@ -8,41 +15,90 @@ import { shakaTyped } from "./utils/typed_shaka";
 
 const PlayerContext = createContext<PlayerContextProps | null>(null);
 
-export const PlayerProvider = ({ children }: any) => {
-  const [_videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
+interface playerProviderProps {
+  children: ReactNode[] | ReactNode;
+  initialDetails: VideoDetails | null;
+  scope: string;
+}
+
+export const PlayerProvider = ({
+  children,
+  initialDetails,
+  scope,
+}: playerProviderProps) => {
+  const [_videoDetails, setVideoDetails] = useState<VideoDetails | null>(
+    initialDetails
+  );
   const [player, setPlayer] = useState<shaka.Player | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [playerScope, setPlayerScope] = useState<string | null>(null);
+  const [playerScope, setPlayerScope] = useState<string>(scope);
   const attempts = useRef(0);
 
-  const attatchPlayer = async () => {
-    await detachPlayer();
+  useEffect(() => {
+    setVideoDetails(initialDetails);
+  }, [initialDetails?.video_id]);
+
+  useEffect(() => {
+    setUpPlayer();
+  }, []);
+
+  const getPlayerElements = () => {
     const playerContainer = document.querySelector(
       `.html5-player-container[data-scope="${playerScope}"]`
-    );
-    if (!playerContainer) return;
-    const videoElement = playerContainer.querySelector(
-      ".html5-player"
-    ) as HTMLVideoElement;
-    const captionContainer = playerContainer.querySelector(
+    ) as HTMLDivElement | null;
+
+    if (!playerContainer) return {};
+
+    const captionsContainer = playerContainer.querySelector(
       ".captions-container-relative"
     ) as HTMLDivElement;
 
-    const manifestUri = _videoDetails?.mpd_url || "";
+    const videoElement = playerContainer.querySelector(
+      ".html5-player"
+    ) as HTMLVideoElement;
 
-    if (
-      manifestUri.length === 0 ||
-      !manifestUri.includes("http") ||
-      !videoElement ||
-      !captionContainer
-    )
+    // add any other container elements we want to query
+
+    return { playerContainer, captionsContainer, videoElement };
+  };
+
+  const loadManifest = () => {
+    const manifestUri = _videoDetails?.mpd_url || "";
+    if (manifestUri.length === 0 || !manifestUri.includes("http") || !player)
       return;
+
+    console.log("loading...");
+
+    // Load the manifest
+    player
+      .load(manifestUri)
+      .then(() => {
+        console.log("manifest loaded");
+      })
+      .catch(async (error) => {
+        await unloadManifest();
+        console.error("Error code", error.code, "object", error);
+        if (attempts.current > 2) {
+          // alert user his browser can't play the content based on error.code
+          console.error("Your browser cannot play this content unfortunately");
+          return;
+        }
+        loadManifest();
+        attempts.current += 1;
+      });
+  };
+
+  const setUpPlayer = async () => {
+    await unloadManifest();
+    const { videoElement, captionsContainer } = getPlayerElements();
+
+    if (!videoElement || !captionsContainer) return;
 
     shakaTyped.polyfill.installAll();
     if (shakaTyped.Player.isBrowserSupported()) {
       const player = new shakaTyped.Player();
 
-      new shakaTyped.ui.Overlay(player, captionContainer, videoElement);
+      new shakaTyped.ui.Overlay(player, captionsContainer, videoElement);
 
       player.attach(videoElement);
 
@@ -70,46 +126,16 @@ export const PlayerProvider = ({ children }: any) => {
         // console.log(event);
       });
 
-      // Load the manifest
-      player
-        .load(manifestUri)
-        .then(() => {})
-        .catch(onError);
-
       setPlayer(player);
     } else {
       console.error("Shaka Player is not supported on this browser.");
     }
   };
 
-  async function onError(error: any) {
-    await detachPlayer();
-    console.error("Error code", error.code, "object", error);
-    if (attempts.current > 2) {
-      // alert user his browser can't play the content based on error.code
-      console.error("Your browser cannot play this content unfortunately");
-      return;
-    }
-    attatchPlayer();
-    attempts.current += 1;
-  }
-
-  async function detachPlayer() {
-    const playerContainer = document.querySelector(
-      `.html5-player-container[data-scope="${playerScope}"]`
-    );
-    if (!playerContainer) return;
-    const captionContainer = playerContainer.querySelector(
-      ".captions-container-relative"
-    ) as HTMLDivElement;
-
-    if (player && captionContainer) {
+  async function unloadManifest() {
+    if (player) {
       await player.unload();
-
-      while (captionContainer.firstChild) {
-        captionContainer.removeChild(captionContainer.firstChild);
-      }
-      setPlayer(null);
+      console.log("unloaded");
     }
   }
 
@@ -124,8 +150,9 @@ export const PlayerProvider = ({ children }: any) => {
         setChapters,
         playerScope,
         setPlayerScope,
-        attatchPlayer,
-        detachPlayer,
+        loadManifest,
+        unloadManifest,
+        getPlayerElements,
       }}
     >
       {children}
