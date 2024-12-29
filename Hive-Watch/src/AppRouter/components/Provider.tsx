@@ -170,10 +170,10 @@ export const ComponentProvider = ({
   const [routeChildren, setRouteChildren] = useState(_routeChildren);
   const [isHidden, setIShidden] = useState(!_isHidden);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIShidden(!_isHidden);
   }, [_isHidden]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     setRouteChildren(_routeChildren);
   }, [_routeChildren]);
 
