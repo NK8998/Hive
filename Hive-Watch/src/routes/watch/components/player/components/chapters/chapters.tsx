@@ -3,7 +3,8 @@ import generateChapters from "../../utils/generate_chapters";
 import { usePlayerContext } from "../../context";
 
 export default function Chapters() {
-  const { _videoDetails, chapters, setChapters } = usePlayerContext();
+  const { _videoDetails, chapters, setChapters, playerDimensions } =
+    usePlayerContext();
   useEffect(() => {
     if (!_videoDetails) return;
     const description = _videoDetails?.description_string ?? "";
@@ -13,8 +14,12 @@ export default function Chapters() {
   }, [_videoDetails]);
 
   useEffect(() => {
-    // console.log(chapters);
-  }, [chapters]);
+    // console.log(playerDimensions);
+    // update chapter styles here
+  }, [playerDimensions]);
+
+  // generate chapter containers directly
+  console.log(chapters);
 
   return <div className='chapters-container'></div>;
 }

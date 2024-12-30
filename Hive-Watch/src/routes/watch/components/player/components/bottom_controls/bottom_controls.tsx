@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { usePlayerContext } from "../../context";
+import { useRouteProperties } from "../../../../../../AppRouter/components/RouteProperties";
 
 export default function BottomControls() {
   const { player, playerScope, getPlayerElements } = usePlayerContext();
+  const isHidden = useRouteProperties();
 
   useEffect(() => {
     const handleSpaceClick = (e: KeyboardEvent) => {
@@ -21,6 +23,7 @@ export default function BottomControls() {
     return () => {
       document.removeEventListener("keypress", handleSpaceClick);
     };
-  }, [player, playerScope]);
+  }, [player, playerScope, isHidden]);
+
   return <div className='bottom-controls'></div>;
 }

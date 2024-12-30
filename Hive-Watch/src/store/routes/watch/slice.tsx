@@ -4,11 +4,15 @@ import { VideoDetails } from "../../../types/player_types";
 // Define the state type
 interface WatchSliceState {
   selectedVideo: VideoDetails | null; // `null` if no video is selected
+  theatreMode: boolean;
+  fullScreen: boolean;
 }
 
 // Initial state with type
 const initialState: WatchSliceState = {
   selectedVideo: null,
+  theatreMode: false,
+  fullScreen: false,
 };
 
 export const watchSlice = createSlice({

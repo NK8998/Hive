@@ -1,7 +1,7 @@
 // Should be reusable
 
-import { useEffect, useState } from "react";
-import { VideoDetails } from "../../../../types/player_types";
+import { useEffect } from "react";
+import { PlayerBounds, VideoDetails } from "../../../../types/player_types";
 import "./player.css";
 
 import { PlayerProvider, usePlayerContext } from "./context";
@@ -13,11 +13,20 @@ import BottomControls from "./components/bottom_controls/bottom_controls";
 interface playerProps {
   videoDetails: VideoDetails | null;
   scope: string;
+  playerBounds: PlayerBounds | null;
 }
 
-export default function Player({ videoDetails, scope }: playerProps) {
+export default function Player({
+  videoDetails,
+  scope,
+  playerBounds,
+}: playerProps) {
   return (
-    <PlayerProvider initialDetails={videoDetails} scope={scope}>
+    <PlayerProvider
+      initialDetails={videoDetails}
+      scope={scope}
+      _playerBounds={playerBounds}
+    >
       <PlayerContent />
     </PlayerProvider>
   );

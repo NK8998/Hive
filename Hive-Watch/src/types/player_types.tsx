@@ -65,6 +65,12 @@ export interface PlayerElements {
   videoElement?: HTMLVideoElement;
 }
 
+export interface PlayerBounds {
+  maxHeight: number;
+  maxWidth: number;
+  availableSpace: number;
+}
+
 export interface PlayerContextProps {
   player: shaka.Player | null;
   setPlayer: React.Dispatch<React.SetStateAction<shaka.Player | null>>;
@@ -74,6 +80,10 @@ export interface PlayerContextProps {
   setChapters: React.Dispatch<React.SetStateAction<Chapter[]>>;
   playerScope: string;
   setPlayerScope: React.Dispatch<React.SetStateAction<string>>;
+  playerBounds: PlayerBounds | null;
+  setPlayerBounds: React.Dispatch<React.SetStateAction<PlayerBounds | null>>;
+  playerDimensions: DOMRect | null;
+  setPlayerDimensions: React.Dispatch<React.SetStateAction<DOMRect | null>>;
   loadManifest: (...args: any) => void;
   unloadManifest: (...args: any[]) => void;
   getPlayerElements: () => PlayerElements;

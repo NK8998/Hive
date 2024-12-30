@@ -14,6 +14,7 @@ function App() {
       dispatch(updateWindowWidth(window.innerWidth));
     });
   }, []);
+
   return (
     <>
       <Masthead />

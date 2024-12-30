@@ -222,6 +222,7 @@ export const fetchSelectedVideo = () => {
   return async (dispatch: Dispatch, getState: RootState) => {
     await new Promise((resolve) => {
       const { pathname, search } = window.location;
+      console.log(pathname, getState.watch.selectedVideo);
       const searchParams = new URLSearchParams(search);
       const targetId = searchParams.get("v");
 

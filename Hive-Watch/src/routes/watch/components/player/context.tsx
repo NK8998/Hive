@@ -1,17 +1,19 @@
+import "./utils/shaka_global.js";
 import {
   createContext,
   ReactNode,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import {
   Chapter,
+  PlayerBounds,
   PlayerContextProps,
   VideoDetails,
 } from "../../../../types/player_types";
-import { shakaTyped } from "./utils/typed_shaka";
 
 const PlayerContext = createContext<PlayerContextProps | null>(null);
 
@@ -19,20 +21,33 @@ interface playerProviderProps {
   children: ReactNode[] | ReactNode;
   initialDetails: VideoDetails | null;
   scope: string;
+  _playerBounds: PlayerBounds | null;
 }
 
 export const PlayerProvider = ({
   children,
   initialDetails,
   scope,
+  _playerBounds,
 }: playerProviderProps) => {
   const [_videoDetails, setVideoDetails] = useState<VideoDetails | null>(
     initialDetails
   );
+  const [playerBounds, setPlayerBounds] = useState<PlayerBounds | null>(
+    _playerBounds
+  );
   const [player, setPlayer] = useState<shaka.Player | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [playerScope, setPlayerScope] = useState<string>(scope);
+  const [playerDimensions, setPlayerDimensions] = useState<DOMRect | null>(
+    null
+  );
+
   const attempts = useRef(0);
+
+  useLayoutEffect(() => {
+    setPlayerBounds(_playerBounds);
+  }, [_playerBounds]);
 
   useEffect(() => {
     setVideoDetails(initialDetails);
@@ -94,11 +109,11 @@ export const PlayerProvider = ({
 
     if (!videoElement || !captionsContainer) return;
 
-    shakaTyped.polyfill.installAll();
-    if (shakaTyped.Player.isBrowserSupported()) {
-      const player = new shakaTyped.Player();
+    shaka.polyfill.installAll();
+    if (shaka.Player.isBrowserSupported()) {
+      const player = new shaka.Player();
 
-      new shakaTyped.ui.Overlay(player, captionsContainer, videoElement);
+      new shaka.ui.Overlay(player, captionsContainer, videoElement);
 
       player.attach(videoElement);
 
@@ -123,7 +138,7 @@ export const PlayerProvider = ({
         console.log("Tracks have been loaded!");
       });
       player.addEventListener("adaptation", (event) => {
-        // console.log(event);
+        console.log(event);
       });
 
       setPlayer(player);
@@ -150,6 +165,10 @@ export const PlayerProvider = ({
         setChapters,
         playerScope,
         setPlayerScope,
+        playerBounds,
+        setPlayerBounds,
+        playerDimensions,
+        setPlayerDimensions,
         loadManifest,
         unloadManifest,
         getPlayerElements,

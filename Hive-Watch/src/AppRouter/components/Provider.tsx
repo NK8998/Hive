@@ -4,7 +4,6 @@ import React, {
   useState,
   useEffect,
   useLayoutEffect,
-  ReactNode,
 } from "react";
 import { nanoid } from "nanoid";
 

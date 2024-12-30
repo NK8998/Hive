@@ -8,7 +8,7 @@ export default function ErrorComponent({ error }: errorProps) {
     <div className='error-txt'>
       <div className='error-inner'>
         <h1>Error!</h1>
-        <p>An error occured when matching routes</p>
+        <p>{error}</p>
       </div>
     </div>
   );

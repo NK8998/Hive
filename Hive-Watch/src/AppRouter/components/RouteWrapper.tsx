@@ -5,7 +5,7 @@ import Route from "./Route";
 
 export default function routeWrapper(children: RouteEntry[]): JSX.Element[] {
   const wrapWithProvider = (children: RouteEntry[]) => {
-    return children.map((child, i) => {
+    return children.map((child) => {
       // Check if the child is a Route component
       // Get the children of this Route
       const routeChildren = child.children;
