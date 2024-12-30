@@ -1,5 +1,5 @@
 import { updateSelectedVideo } from "./slice";
-import { RootState } from "../../store";
+// import { RootState } from "../../store";
 import { Dispatch } from "@reduxjs/toolkit";
 import { VideoDetails } from "../../../types/player_types";
 
@@ -219,9 +219,9 @@ const videos: VideoDetails[] = [
 ];
 
 export const fetchSelectedVideo = () => {
-  return async (dispatch: Dispatch, getState: RootState) => {
+  return async (dispatch: Dispatch) => {
     await new Promise((resolve) => {
-      const { pathname, search } = window.location;
+      const { search } = window.location;
       const searchParams = new URLSearchParams(search);
       const targetId = searchParams.get("v");
 

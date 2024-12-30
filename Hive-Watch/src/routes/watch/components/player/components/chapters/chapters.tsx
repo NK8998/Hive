@@ -17,6 +17,7 @@ export default function Chapters() {
     // console.log(playerDimensions);
     // update chapter styles here
   }, [playerDimensions]);
+  console.log(chapters);
 
   // generate chapter containers directly
 

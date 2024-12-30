@@ -1,5 +1,5 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
+// import { RootState } from "../../store";
 import { updateInitialFetch } from "./slice";
 const video = {
   aspect_ratio: 2.406,
@@ -99,7 +99,7 @@ const video = {
 };
 
 export const fetchfeaturedContent = () => {
-  return async (dispatch: Dispatch, getState: RootState) => {
+  return async (dispatch: Dispatch) => {
     await new Promise((resolve) => {
       const { pathname, search } = window.location;
       setTimeout(() => {
