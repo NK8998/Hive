@@ -73,9 +73,7 @@ export function generateRouteLookup(
     //
     const elements = Children.toArray(children).filter(
       (child): child is ReactElement<RouteProps> =>
-        React.isValidElement<RouteProps>(child) &&
-        typeof child.type !== "string" &&
-        child.type === Route // Compare component type directly
+        React.isValidElement<RouteProps>(child) && child.type === Route // Compare component type directly
     );
 
     if (elements.length !== Children.toArray(children).length) {
