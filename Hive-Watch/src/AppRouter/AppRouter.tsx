@@ -22,7 +22,7 @@ export default function AppRouter({
   const [routeLookup, setRouteLookUp] = useState<RouteEntry[]>([]);
   const [currentRoutes, setCurrentRoutes] = useState<RouteEntry[]>([]); // Track routes for caching
   const [wrappedRoutes, setWrappedRoutes] = useState<JSX.Element[]>([]);
-  const prevKey = useRef<string>(null);
+  const prevKey = useRef<string | null>(null);
   const { setParams, setTargetRoute } = useBrowserContext();
   const [error, setError] = useState("");
 
