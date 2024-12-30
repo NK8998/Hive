@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import React, { Children, ReactElement, ReactNode } from "react";
 import { Dispatch } from "@reduxjs/toolkit";
 import { RootState } from "../../store/store";
+import Route from "./Route";
 
 interface RouteProps {
   path: string;
@@ -73,8 +74,8 @@ export function generateRouteLookup(
     const elements = Children.toArray(children).filter(
       (child): child is ReactElement<RouteProps> =>
         React.isValidElement<RouteProps>(child) &&
-        typeof child.type !== "string" && // Ensure it's not an intrinsic element
-        child.type.name === "Route" // Explicitly check type.name
+        typeof child.type !== "string" &&
+        child.type === Route // Compare component type directly
     );
 
     if (elements.length !== Children.toArray(children).length) {
