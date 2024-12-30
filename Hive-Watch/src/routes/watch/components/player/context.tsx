@@ -138,7 +138,7 @@ export const PlayerProvider = ({
         console.log("Tracks have been loaded!");
       });
       player.addEventListener("adaptation", (event) => {
-        console.log(event);
+        // console.log(event);
       });
 
       setPlayer(player);

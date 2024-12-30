@@ -100,8 +100,6 @@ const video = {
 
 export const fetchfeaturedContent = () => {
   return async (dispatch: Dispatch, getState: RootState) => {
-    const state = getState.app;
-    console.log(state);
     await new Promise((resolve) => {
       const { pathname, search } = window.location;
       setTimeout(() => {

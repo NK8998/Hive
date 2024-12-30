@@ -19,7 +19,6 @@ export default function Chapters() {
   }, [playerDimensions]);
 
   // generate chapter containers directly
-  console.log(chapters);
 
   return <div className='chapters-container'></div>;
 }
