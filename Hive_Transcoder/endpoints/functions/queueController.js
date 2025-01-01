@@ -11,6 +11,7 @@ let currentJobs = [];
 const MAXIMUM_CONCURRENT_JOBS = 5;
 
 const updateInternalQueue = (video) => {
+  console.log(video);
   if (video.instance_id !== null) return;
   // check if this video belongs to this instance before adding it to queue
   internalQueue = [...internalQueue, video];
@@ -58,7 +59,7 @@ async function addJob(videoToAdd) {
       .from("video-queue")
       .update({ state: "processing", instance_id: instanceId })
       .eq("video_id", videoToAdd.video_id)
-      .eq("instance_id", null);
+      .is("instance_id", null);
 
     if (updateError) {
       console.error("Error updating video state: ", updateError);

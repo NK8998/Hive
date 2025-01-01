@@ -33,7 +33,7 @@ const subscribeToSupabase = async () => {
             table: "video-queue",
           },
           (payload) => {
-            console.log("Change received!", payload);
+            // console.log("Change received!", payload);
             updateInternalQueue(payload.new);
           }
         )
@@ -44,7 +44,7 @@ const subscribeToSupabase = async () => {
 };
 
 async function handleInstanceJobs(environment, instance_id, secrets) {
-  if (environment === "prod") {
+  if (environment === "prod" || environment === "local") {
     if (instance_id === secrets.AWS_ORIGINAL_INSTANCE_ID) {
       console.log("This is the base image");
       return;
@@ -53,7 +53,7 @@ async function handleInstanceJobs(environment, instance_id, secrets) {
     // Only non-original instances should run the jobs
     try {
       const maintenanceData = await checkMaintananceStatus();
-      if (maintenanceData?.under_maintenance !== false) {
+      if (maintenanceData?.under_maintenance !== true) {
         await subscribeToSupabase();
       } else {
         console.log("Under maintenance", { maintenance: maintenanceData });

@@ -9,8 +9,9 @@ const getVideosInQueue = async () => {
     .from("video-queue")
     .select("*")
     .eq("state", "unprocessed")
-    .eq("instance_id", null)
-    .order("time_added", { ascending: true });
+    .is("instance_id", null)
+    .order("time_added", { ascending: true })
+    .limit(5);
 
   if (error) {
     console.error("Error retrieving videos:", error);
