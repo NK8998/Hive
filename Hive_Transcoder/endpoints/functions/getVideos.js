@@ -1,21 +1,23 @@
-const { retrieveInstanceId } = require("./getInstanceId");
 require("dotenv").config();
 const supabaseServices = require("../SDKs/supabase");
 
 const getVideosInQueue = async () => {
   const { supabase } = await supabaseServices();
-  const instanceId = retrieveInstanceId();
 
-  const videosInQueue = supabase
+  // Retrieve videos in the queue
+  const { data: videos, error } = await supabase
     .from("video-queue")
     .select("*")
     .eq("state", "unprocessed")
-    .eq("instance_id", instanceId) // Add this line
+    .eq("instance_id", null)
     .order("time_added", { ascending: true });
 
-  const { data, error } = await videosInQueue;
+  if (error) {
+    console.error("Error retrieving videos:", error);
+    return null;
+  }
 
-  return data;
+  return videos;
 };
 
 module.exports = getVideosInQueue;

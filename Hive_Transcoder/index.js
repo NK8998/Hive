@@ -43,40 +43,42 @@ const subscribeToSupabase = async () => {
   });
 };
 
-async function startInstaceJobs() {
-  const secrets = await getSecrets();
-  const instance_id = await getInstanceId();
+async function handleInstanceJobs(environment, instance_id, secrets) {
+  if (environment === "prod") {
+    if (instance_id === secrets.AWS_ORIGINAL_INSTANCE_ID) {
+      console.log("This is the base image");
+      return;
+    }
 
-  if (
-    environment === "prod" &&
-    instance_id !== secrets.AWS_ORIGINAL_INSTANCE_ID
-  ) {
-    // only instances that are not the original instance should run the jobs
-    await checkMaintananceStatus().then(async (data) => {
-      if (data && data.under_maintenance !== false) {
+    // Only non-original instances should run the jobs
+    try {
+      const maintenanceData = await checkMaintananceStatus();
+      if (maintenanceData?.under_maintenance !== false) {
         await subscribeToSupabase();
       } else {
-        console.log("Under maintenance", { maintenance: data });
+        console.log("Under maintenance", { maintenance: maintenanceData });
       }
-    });
-  } else if (instance_id === secrets.AWS_ORIGINAL_INSTANCE_ID) {
-    console.log("this is the base image");
-  }
-  if (environment === "dev") {
+    } catch (err) {
+      console.error("Something went wrong", err);
+    }
+  } else if (environment === "dev") {
+    // Handle dev environment
     updateInternalQueue({
       video_id: "testing",
       instance_id: secrets.AWS_ORIGINAL_INSTANCE_ID,
     });
   }
-
   startJobs();
 }
 
-const initiateInstance = async () => {
-  startInstaceJobs();
-};
+async function startInstaceJobs() {
+  const secrets = await getSecrets();
+  const instance_id = await getInstanceId();
 
-initiateInstance();
+  handleInstanceJobs(environment, instance_id, secrets);
+}
+
+startInstaceJobs();
 
 // git clone https://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@github.com/NK8998/TranscodingServer
 
