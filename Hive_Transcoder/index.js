@@ -9,6 +9,7 @@ const {
 } = require("./endpoints/functions/getInstanceId");
 const getSecrets = require("./endpoints/secrets/secrets");
 const supabaseServices = require("./endpoints/SDKs/supabase");
+const checkMaintananceStatus = require("./endpoints/functions/checkMaintenance");
 const environment = getEnvironment();
 
 const maxStartupDelay = 1000;
@@ -46,13 +47,18 @@ async function startInstaceJobs() {
   const secrets = await getSecrets();
   const instance_id = await getInstanceId();
 
-  console.log(secrets);
   if (
     environment === "prod" &&
     instance_id !== secrets.AWS_ORIGINAL_INSTANCE_ID
   ) {
     // only instances that are not the original instance should run the jobs
-    await subscribeToSupabase();
+    await checkMaintananceStatus().then(async (data) => {
+      if (data && data.under_maintenance !== false) {
+        await subscribeToSupabase();
+      } else {
+        console.log("Under maintenance", { maintenance: data });
+      }
+    });
   } else if (instance_id === secrets.AWS_ORIGINAL_INSTANCE_ID) {
     console.log("this is the base image");
   }
