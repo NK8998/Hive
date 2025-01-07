@@ -44,6 +44,7 @@ export const PlayerProvider = ({
   );
 
   const attempts = useRef(0);
+  const playerSetUpRef = useRef(false); // Track if the player has been set up already
 
   useLayoutEffect(() => {
     setPlayerBounds(_playerBounds);
@@ -54,9 +55,12 @@ export const PlayerProvider = ({
   }, [initialDetails?.video_id]);
 
   useEffect(() => {
-    setUpPlayer();
-  }, []);
-
+    // Only call setUpPlayer if it hasn't been set up already
+    if (!playerSetUpRef.current) {
+      setUpPlayer();
+      playerSetUpRef.current = true; // Mark as set up
+    }
+  }, []); // Run only once when the component mounts
   const getPlayerElements = () => {
     const playerContainer = document.querySelector(
       `.html5-player-container[data-scope="${playerScope}"]`

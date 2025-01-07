@@ -14,7 +14,7 @@ Hive_Watch uses a custom router (`AppRouter`) designed to address specific needs
 - **Error Handling**: Graceful error messages can be displayed if route actions fail.
 
 ### 2. **Advanced Video Streaming Features**
-- **Dynamic Video Rendering**: Videos are streamed with adaptive bitrate, ensuring optimal playback across devices and network conditions.
+- **Dynamic Video Rendering**: Videos are streamed with adaptive bitrate, ensuring optimal playback across devices and network conditions. This is handled by a reusable shaka player component
 - **Centralized State Management**: Integrated with **Redux** for efficient state handling, allowing smooth synchronization of video metadata, playback states, and user preferences.
 
 ### 3. **Integration with Modern Web Technologies**

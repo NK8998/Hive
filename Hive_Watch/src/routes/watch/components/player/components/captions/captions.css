@@ -1,3 +1,4 @@
+@import 'shaka-player/dist/controls.css';
 .captions-container-absolute{
     position: absolute;
     width: 100%;
@@ -11,7 +12,7 @@
     height: 100%;
 }
 
-.shaka-controls-container,
+/* .shaka-controls-container,
 .shaka-scrim-container,
 .shaka-hidden-fast-forward-container,
 .shaka-fast-foward-container,
@@ -21,7 +22,7 @@
 .shaka-spinner-container,
 .shaka-spinner{
   display: none;
-}
+} */
 
 .shaka-text-container{
     transition: bottom 150ms ease;
