@@ -1,5 +1,6 @@
 @import 'shaka-player/dist/controls.css';
 .captions-container-absolute{
+    display: none;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -25,6 +26,7 @@
 } */
 
 .shaka-text-container{
+    margin-top: auto;
     transition: bottom 150ms ease;
     bottom: 0px;
     position: absolute;

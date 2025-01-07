@@ -109,15 +109,15 @@ export const PlayerProvider = ({
 
   const setUpPlayer = async () => {
     await unloadManifest();
-    const { videoElement, captionsContainer } = getPlayerElements();
+    const { videoElement, playerContainer } = getPlayerElements();
 
-    if (!videoElement || !captionsContainer) return;
+    if (!videoElement || !playerContainer) return;
 
     shaka.polyfill.installAll();
     if (shaka.Player.isBrowserSupported()) {
       const player = new shaka.Player();
 
-      new shaka.ui.Overlay(player, captionsContainer, videoElement);
+      new shaka.ui.Overlay(player, playerContainer, videoElement);
 
       player.attach(videoElement);
 
