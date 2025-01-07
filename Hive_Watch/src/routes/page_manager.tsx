@@ -22,7 +22,7 @@ export default function PageManager() {
   };
   return (
     <div className='page-manager'>
-      <AppRouter cacheEnabled>
+      <AppRouter persist>
         <Route
           element={<Home />}
           path='/'
@@ -36,6 +36,7 @@ export default function PageManager() {
           prefetch
           action={() => handleAction(fetchSelectedVideo)}
           classList='watch'
+          isVisited
         />
         <Route
           element={<Channel />}

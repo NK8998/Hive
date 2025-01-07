@@ -11,9 +11,9 @@ export default function Featured() {
   const { windowWidth } = useAppSelector((state) => state.app);
   const { featured } = useAppSelector((state) => state.channel);
   const [playerBounds, setPlayerBounds] = useState<PlayerBounds | null>({
-    maxWidth: 450,
-    maxHeight: 450,
-    availableSpace: 450,
+    maxWidth: 500,
+    maxHeight: 500,
+    availableSpace: 500,
   });
   const isHidden = useRouteProperties();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,7 +24,6 @@ export default function Featured() {
     if (isHidden) {
       // or any other function to remove the video so unloading occurs
       dispatch(updateInitialFetch({ featuredVideo: null }));
-    } else {
     }
   }, [isHidden]);
 
@@ -34,10 +33,10 @@ export default function Featured() {
       containerRef.current.clientWidth > 500
         ? 500
         : containerRef.current.clientWidth;
-    const maxWidth = 400;
-    const maxHeight = 300;
+    const maxWidth = 500;
+    const maxHeight = 500;
     setPlayerBounds({ maxWidth, maxHeight, availableSpace });
-  }, [windowWidth]);
+  }, [windowWidth, isHidden]);
   return (
     <div className='featured' ref={containerRef}>
       <p>These are the featured content</p>

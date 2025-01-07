@@ -20,18 +20,18 @@ export interface RouteProps {
   children?: ReactNode | ReactNode[]; // children can be a ReactNode or an array of ReactNode
   componentID?: string;
   index?: boolean;
-  cacheEnabled?: boolean;
+  persist?: boolean;
   classList?: string;
 }
 
 export default function Route({
   element,
-  cacheEnabled,
+  persist,
   isVisited,
   isActive,
   classList,
 }: RouteProps) {
-  if (cacheEnabled) {
+  if (persist) {
     return isVisited ? (
       <div
         className={`${classList ? classList : ""} hvd-browse`}

@@ -1,91 +1,129 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Hive_Watch
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-# React Route Management with Dynamic Parameters and Redux Integration
-
-This project is a custom React router implementation designed to manage dynamic routes with parameters, prefetching, and Redux integration for asynchronous actions. It includes a dynamic routing system that supports paths with parameters (e.g., `:id`) and static paths, along with nested route handling.
+Hive_Watch is a React-based video streaming platform built using **React**, **Vite**, and **TypeScript**, with **Redux** for state management. It provides a seamless video-watching experience powered by a custom routing system tailored for advanced features like route persistence.
 
 ## Features
 
-- **Dynamic Route Handling**: Automatically replaces dynamic parameters in the URL with actual values from the URL path (e.g., `:channelName`).
-- **Nested Routes**: Supports nested routes with recursive route handling.
-- **Prefetching**: Option to prefetch data for routes before navigating.
-- **Redux Integration**: Supports asynchronous actions (e.g., fetching data) on route changes using Redux.
+### 1. **Custom Router**
+Hive_Watch uses a custom router (`AppRouter`) designed to address specific needs not met by existing solutions like React Router. Key features include:
+- **Route Persistence**: The `persist` parameter allows inactive routes to remain in the DOM but hidden, enabling state retention when switching between routes.
+- **Dynamic & Nested Routes**: Supports dynamic paths, index routes, and multi-level nesting for complex navigation structures.
+- **Prerendering**: Routes can be pre-rendered by enabling the `isVisited` property for faster transitions and improved user experience.
+- **Action Handling**: Parent routes can have `action` handlers triggered before navigation to fetch data or perform side effects. These handlers ensure UI updates only after successful data retrieval.
+- **Error Handling**: Graceful error messages can be displayed if route actions fail.
 
-## Setup
+### 2. **Advanced Video Streaming Features**
+- **Dynamic Video Rendering**: Videos are streamed with adaptive bitrate, ensuring optimal playback across devices and network conditions.
+- **Centralized State Management**: Integrated with **Redux** for efficient state handling, allowing smooth synchronization of video metadata, playback states, and user preferences.
 
-1. **Clone the repository**:
+### 3. **Integration with Modern Web Technologies**
+- Built with **React + Vite** for fast development and optimized production builds.
+- **TypeScript** ensures robust type safety and maintainability.
+- **Custom Components**: Implements essential features like `Link`, `useLocation`, and `useParams` for navigation and parameter handling.
 
-   ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
-   ```
+## Example Setup
 
-2. **Install dependencies**:
-
-   ```bash
-   cd your-repo-name
-   npm install
-   ```
-
-3. **Run the application**:
-
-   ```bash
-   npm start
-   ```
-
-## Key Components
-
-- **`Route`**: A custom component for defining routes with dynamic parameters and nested routes.
-- **`ComponentProvider`**: A context provider used to wrap route components and pass data through the component tree.
-- **`routeWrapper`**: A higher-order function that wraps routes and their children in a context provider for state management.
-- **Redux Integration**: Routes can dispatch asynchronous actions (like fetching data) using Redux's `dispatch` and `getState`.
-
-## Example Usage
-
-### Defining Routes
-
+### `Main.tsx`
 ```tsx
-<Route path="/watch/:videoId" element={<Watch />} action={() => dispatch(fetchSelectedVideo(pathname, search))} />
+import { AppRouterProvider } from "./AppRouter/components/Provider.tsx";
+
+createRoot(document.getElementById("hvd-app")!).render(
+  <StrictMode>
+    <Provider store={store}>
+      <AppRouterProvider>
+        <App />
+      </AppRouterProvider>
+    </Provider>
+  </StrictMode>
+);
 ```
 
-This route will match any URL with the path `/watch/:videoId` and trigger the `fetchSelectedVideo` action.
-
-### Nested Routes
-
+### `App.tsx`
 ```tsx
-<Route path="/dashboard" element={<Dashboard />}>
-  <Route path="/dashboard/settings" element={<Settings />} />
-  <Route path="/dashboard/profile" element={<Profile />} />
-</Route>
-```
+export default function App() {
+  const dispatch = useAppDispatch();
 
-```tsx
-      {/* Wild card route always at bottom */}
-      <Route path='*' element={<NotFound />} />
-```
-
-Nested routes are handled recursively, and each route can have its own children.
-
-### Fetching Data on Route Change
-
-```tsx
-const fetchSelectedVideo = (pathname: string, search: string) => {
-  return async (dispatch: Dispatch, getState: RootState) => {
-    console.log(pathname, search);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    dispatch(updateSelectedVideo({ videoId: nanoid(8), url: "http://example.com/output.mpd" }));
+  const handleAction = async (func: any) => {
+    await dispatch(func());
   };
-};
+
+  return (
+    <div className="page-manager">
+      <AppRouter persist>
+        <Route
+          element={<Home />}
+          path="/"
+          prefetch
+          action={() => handleAction(fetchVideos)}
+          classList="home"
+        />
+        <Route
+          element={<Watch />}
+          path="/watch"
+          prefetch
+          action={() => handleAction(fetchSelectedVideo)}
+          classList="watch"
+          isVisited
+        />
+        {/* Nested Routes */}
+        <Route
+          element={<Channel />}
+          path="/:channelName"
+          action={() => handleAction(fetchFeaturedContent)}
+          prefetch
+        >
+          <Route element={<Featured />} path=":featured" index prefetch />
+          <Route element={<Videos />} path="videos" prefetch>
+            <Route element={<Inner />} path="inner" prefetch>
+              <Route element={<Inner2 />} path=":inner2" prefetch />
+            </Route>
+          </Route>
+        </Route>
+        <Route
+          element={<History />}
+          path="/history"
+          classList="history"
+          prefetch
+        />
+        <Route path="*" element={<NotFound />} />
+      </AppRouter>
+    </div>
+  );
+}
 ```
 
-Actions can be dispatched on route change to fetch or update data.
+### `Route.tsx`
+```tsx
+export default function Route({
+  element,
+  persist,
+  isVisited,
+  isActive,
+  classList,
+}: RouteProps) {
+  if (persist) {
+    return isVisited ? (
+      <div
+        className={`${classList || ""} hvd-browse`}
+        hidden={!isActive}
+      >
+        {element}
+      </div>
+    ) : null;
+  } else {
+    return isActive ? <div className="hvd-browse">{element}</div> : null;
+  }
+}
+```
 
-## Contributing
+## Key Benefits of the Custom Router
+- **Improved UX**: Route persistence reduces delays when revisiting routes, maintaining state and context without unnecessary re-rendering.
+- **Prefetching**: Ensures essential routes are ready in advance for a seamless experience.
+- **Action-Driven Navigation**: Centralized handling of asynchronous actions tied to navigation, with error handling built-in.
+- **Wildcard Routes**: Catch-all route support for handling unmatched paths (e.g., 404 pages or redirections).
 
-Feel free to submit pull requests or raise issues for any bugs or enhancements.
+## Future Enhancements
+- **Improved Child Route Actions**: Extend support for `action` handlers in child routes to provide more granular data fetching capabilities.
+- **Enhanced Prefetching**: Optimize the prerendering logic for better resource utilization.
+- **Dynamic Import Support**: Integrate dynamic imports for route components to further improve performance.

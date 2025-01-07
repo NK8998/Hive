@@ -12,6 +12,7 @@ interface RouteProps {
   action?: (...args: any[]) => Promise<void>;
   index?: boolean;
   classList?: string;
+  isVisited?: boolean;
 }
 
 export interface RouteEntry {
@@ -30,13 +31,13 @@ export interface RouteEntry {
   children: RouteEntry[];
   componentID: string;
   index: boolean;
-  cacheEnabled: boolean;
+  persist: boolean;
   classList: string;
 }
 
 export function generateRouteLookup(
   children: ReactNode,
-  cacheEnabled: boolean,
+  persist: boolean,
   parentPath = "",
   parentFullPath: string | null = null
 ): RouteEntry[] {
@@ -66,7 +67,7 @@ export function generateRouteLookup(
 
   function processRoutes(
     children: ReactNode,
-    cacheEnabled: boolean,
+    persist: boolean,
     parentPath = "",
     parentFullPath: string | null = null
   ): RouteEntry[] {
@@ -98,20 +99,20 @@ export function generateRouteLookup(
         element: child.props.element,
         prefetch: child.props.prefetch,
         action: child.props.action,
-        isVisited: false,
+        isVisited: child.props.isVisited ?? false,
         parent: parentFullPath,
         index: !!child.props.index,
         isActive: false,
         componentID: nanoid(8),
         children: [],
-        cacheEnabled,
+        persist,
         classList: child.props.classList ?? "",
       };
 
       if (child.props.children) {
         route.children = processRoutes(
           child.props.children,
-          cacheEnabled,
+          persist,
           fullPath,
           fullPath
         );
@@ -122,5 +123,5 @@ export function generateRouteLookup(
     return routes;
   }
 
-  return processRoutes(children, cacheEnabled, parentPath, parentFullPath);
+  return processRoutes(children, persist, parentPath, parentFullPath);
 }

@@ -1,4 +1,12 @@
-import { JSX, ReactNode, useLayoutEffect, useRef, useState } from "react";
+import {
+  JSX,
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { RouteProps } from "./components/Route";
 import { matchRoute } from "./components/routeMatching";
 import { useBrowserContext, useLocation } from "./components/Provider";
@@ -11,26 +19,31 @@ import ErrorComponent from "./components/Error/error";
 
 interface AppRouterProps {
   children: ReactNode[] & { props: RouteProps }[];
-  cacheEnabled?: boolean;
+  persist?: boolean;
 }
 
 export default function AppRouter({
   children,
-  cacheEnabled = false,
+  persist = false,
 }: AppRouterProps) {
+  // Generate route lookup on initial render
+  const routeLookup = useMemo(() => {
+    return generateRouteLookup(children, persist);
+  }, [children]);
+
+  const alreadyVisitiedChildren = useMemo(() => {
+    return routeLookup.filter((r) => r.isVisited);
+  }, [children]);
+
   const { pathname, key, pathWithSearch } = useLocation();
-  const [routeLookup, setRouteLookUp] = useState<RouteEntry[]>([]);
-  const [currentRoutes, setCurrentRoutes] = useState<RouteEntry[]>([]); // Track routes for caching
+  const [currentRoutes, setCurrentRoutes] = useState<RouteEntry[]>(
+    alreadyVisitiedChildren
+  ); // Track routes for caching
   const [wrappedRoutes, setWrappedRoutes] = useState<JSX.Element[]>([]);
   const prevKey = useRef<string | null>(null);
   const { setParams, setTargetRoute } = useBrowserContext();
   const [error, setError] = useState("");
-
-  // Generate route lookup on initial render
-  useLayoutEffect(() => {
-    const routes = generateRouteLookup(children, cacheEnabled);
-    setRouteLookUp(routes);
-  }, []);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async (action: any) => {
     await action();
@@ -39,7 +52,7 @@ export default function AppRouter({
   const updateUI = (params: any, route: RouteEntry) => {
     if (key !== prevKey.current) return;
 
-    if (cacheEnabled) {
+    if (persist) {
       // Add route to currentRoutes, replacing an existing route if the componentID matches
       setCurrentRoutes((prevRoutes) => {
         const routeIndex = prevRoutes.findIndex(
@@ -62,6 +75,7 @@ export default function AppRouter({
 
     setParams(params);
     setTargetRoute(pathname);
+    setLoading(false);
   };
 
   const matchRoutes = () => {
@@ -83,6 +97,7 @@ export default function AppRouter({
           console.error("Something went wrong", error);
           setError("An error occured");
         });
+
       return;
     }
 
@@ -92,17 +107,20 @@ export default function AppRouter({
   };
 
   useLayoutEffect(() => {
+    if (loading) return;
     const routesWithProvider = routeWrapper(currentRoutes);
     setWrappedRoutes(routesWithProvider);
-  }, [currentRoutes]); // Re-wrap the routes when currentRoutes changes
+  }, [currentRoutes, loading]); // Re-wrap the routes when currentRoutes changes
 
   // Trigger route matching on routeLookup or pathname change
-  useLayoutEffect(() => {
+  useEffect(() => {
+    setLoading(true);
+
     prevKey.current = key;
     matchRoutes();
-  }, [pathWithSearch, routeLookup]); // Ensure currentRoutes is a dependency
+  }, [pathWithSearch]); // Ensure currentRoutes is a dependency
 
-  if (routeLookup.length === 0) return null;
+  if (routeLookup.length === 0 || wrappedRoutes.length === 0) return null;
 
   return error ? <ErrorComponent error={error} /> : wrappedRoutes;
 }
